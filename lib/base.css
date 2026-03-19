@@ -1,0 +1,883 @@
+*{
+	
+}
+body.dark {
+  background: #121212;
+  color: #fff;
+}
+#darkBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 15px;
+  padding: 10px 14px;
+  border-radius: 25px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* تحسين شكل المدخلات لتشبه التطبيقات */
+#inpSearch {
+    border-radius: 25px !important; /* شكل بيضاوي */
+    padding: 10px 20px !important;
+    border: 1px solid #ddd !important;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1) !important;
+	background:#ffffff
+	
+}
+
+/* جعل البحث ثابت في الأعلى بشكل احترافي */
+.searcharea {
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+	background-image:url("img/background.png");
+	background-repeat:repeat;
+	background:#fff
+}
+
+/* تحسين شكل الأزرار في الموبايل */
+@media (max-width: 600px) {
+    .metaBtnn {
+        font-size: 12px !important; /* تصغير النص قليلاً ليتناسب مع العرض */
+        padding: 5px !important;
+    }
+    
+    .outerDvFlx {
+        flex-direction: column; /* ترتيب العناصر فوق بعضها في الشاشات الصغيرة جداً */
+        text-align: left;
+		
+    }
+
+    .nameTD {
+        text-align: left !important;
+		
+    }
+
+    /* إخفاء الجداول القديمة التي تسبب خروج عن الشاشة */
+    #dafte {
+        display: block;
+        overflow-x: auto; /* السماح بالتمرير الجانبي للجدول */
+        white-space: nowrap;
+    }
+}
+#tableInfo {
+	background-image:url("img/background.png");
+	background-repeat:repeat;
+
+}
+body{
+	background-image:url("img/background.png");
+	background-repeat:repeat;
+
+}
+.container {
+    width: 100%;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right:0 auto;
+    margin-left:0 auto;
+}
+
+.plus {
+	padding:0;
+	margin:0;
+	font-size:14px;
+	cursor:pointer;
+	display:none
+}
+#XDelt{
+	cursor:pointer;
+	border-radius:5px;
+	padding:1px 4px;
+	transition:.2s
+
+}
+#XDelt:hover {
+	background:red;
+	transition:.2s
+}
+.img-box {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+	border: 3px solid #fff;
+	flex-shrink: 0;
+
+}
+.img-box img {
+	width: 100%;
+}
+.square {
+	width:100px;
+	height:100px;
+	background:#dddddd44;
+	font-size:15px;
+	transition:0.2s;
+	margin:5px;
+	padding:5px;
+	cursor:pointer;
+	
+}
+.square:hover {
+	background:#000;
+	color:white;
+}
+.allBox {
+	display:none;
+	align-items:center
+
+}
+.data-info .box {
+	background: #123;
+	height: 150px;
+	flex-basis: 150px;
+	flex-grow: 1;
+	border-radius: 8px;
+	display: flex;
+	justify-content: space-around;
+	align-items: center;
+	color:white
+}
+.data-info .box i {
+	font-size: 30px;
+}
+.data-info .box ,data{
+	text-align: center;
+}
+.data-info .box span {
+	font-size: 30px;
+	font-weight: 500;
+}
+.listUpdate {
+background:green;
+color:white;
+border:3px solid black;
+text-align:center
+
+}
+#resultDivDatta{
+background:#610B21;
+padding:10px;
+border-radius:5px;
+width:98%;
+margin:5px auto;
+color:#fff;
+overflow-y: auto;
+height: 100%; /* أو قيمة ثابتة */
+box-shadow:0 0 6px 1px rgb(0 0 0 / 23%);
+
+}
+
+.listTitle {
+margin:20px;
+padding:20px;
+border:3px solid white;
+background:skyblue
+}
+.listTr {
+margin:20px;
+padding:20px;
+border:3px solid white;
+}
+#newTableApp th,#newTableApp td{
+padding:5px;
+border:1px solid black;
+}
+#searchMode{
+text-align:center;
+border-radius:10px;
+line-height:30px;
+font-size:15px;
+background:#610B21;
+width:100%;
+height:100%;
+border:0;
+color:#fff;
+padding-top:7px;
+}
+
+.search-mode-wrap{
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    min-width: 140px;
+}
+
+#searchMode{
+    width: 100%;
+    height: 42px;
+    padding: 6px 35px 6px 30px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #2c3e50;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.search-mode-icon{
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 15px;
+    color: #fff;
+    pointer-events: none;
+}
+
+/* القائمة المنسدلة */
+.divSlidyInp{
+    position: absolute;
+    top: 105%;
+    left: 0;
+    width: 100%;
+    background: #1e272e;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 6px 15px rgba(0,0,0,.3);
+    display: none;
+    z-index: 999;
+}
+
+.divSlidyInp.show{
+    display: block;
+}
+
+.spanSlidy{
+    padding: 10px;
+    font-size: 14px;
+    color: #123;
+    cursor: pointer;
+}
+
+.spanSlidy:hover{
+    background: #123;
+	color:#fff
+}
+
+
+
+.divSlidyInp{
+position:absolute;
+top:53px;
+background:#fff;
+width:100%;
+font-size:17px;
+font-weight:bold;
+text-align:left;
+padding:5px;
+border-radius:10px;
+box-shadow:0 0 6px 1px rgb(0 0 0 / 23%);
+z-index:999;
+}
+.outerDvFlx{
+min-height:30px;
+width:98%;
+display:flex;
+justify-content:space-between;
+background:#EFFBF8;
+border-radius:5px;
+margin:5px auto;
+box-shadow:0 0 6px 1px rgb(0 0 0 / 23%);
+}
+
+.priceTD{
+font-size:1.3em;
+width:20% !important;
+padding:10px 2px;
+margin:5px;
+line-height:1.5em;
+text-align:center;
+border-radius:5px;
+background:#fff;
+border:1px solid black;
+}
+.nameTD{
+padding:5px;
+font-size:1em;
+text-align:left;
+}
+
+.trMetaEl{
+display:none;
+margin-top:0;
+height:50px;
+font-size:32px;
+background:#D8F6CE;
+border-radius:10px;
+
+}
+.sizeing{
+display:none;
+margin-top:0;
+height:50px;
+font-size:22px;
+background:#D8F6CE;
+border-radius:10px;
+
+}
+.metaBtnn{
+margin:5px;
+width:29%;
+font-size:14px;
+height:35px;
+}
+.box-data {
+width:100px;
+height:100px;
+background-color:#123;
+color:white;
+margin:10px 0;
+display:none;
+}
+
+
+.box-show {
+	background-color:#21b1c3;
+	margin:20px 0;
+	border:2px solid black
+}
+.box-show p {
+	color:#123;
+	font-size:20px;
+	font-weight:bold;
+	margin:10px 0;
+	text-align:right
+	
+}
+.box-show label {
+	text-align:right;
+	color:white;
+	border:2px solid black;
+	display:block
+}
+table {
+      width: 100%;
+      border-collapse:collapse;
+	  font-weight:bold;
+	  text-transform:uppercase;
+}
+#tbody {
+	background: #ffffff55;
+	border-radius: 8px;
+	height:40px;
+	color:#00000099;
+	text-align:center;
+	
+	
+
+}
+th, td{
+	padding: 5px;
+	border:1px solid #ddd;
+	
+}
+tr:nth-child(even){
+	background-color:#f2f2f2;
+	
+	
+}
+
+/* زر الإعدادات */
+#settingsBtn {
+  position: fixed;
+  bottom: 70px;
+  right: 15px;
+  padding: 10px 14px;
+  border-radius: 25px;
+  border: 1px solid var(--border-main);
+  background: var(--bg-card);
+  color: var(--text-main);
+}
+
+/* Panel */
+.settings-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 9999;
+}
+
+.settings-content {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--bg-card);
+  border-radius: 20px 20px 0 0;
+  padding: 20px;
+}
+
+/* Rows */
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 15px 0;
+}
+
+/* Font buttons */
+.font-buttons button {
+  margin: 0 3px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-main);
+  background: var(--bg-soft);
+}
+
+/* Close */
+.close-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  background: var(--accent);
+  color: white;
+}
+
+/* Switch */
+.switch {
+  position: relative;
+  width: 45px;
+  height: 24px;
+}
+.switch input {
+  display: none;
+}
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #ccc;
+  border-radius: 24px;
+}
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: .3s;
+}
+.switch input:checked + .slider {
+  background: var(--accent);
+}
+.switch input:checked + .slider::before {
+  transform: translateX(20px);
+}
+/* From Uiverse.io by Madflows */ 
+/* From Uiverse.io by mobinkakei */ 
+.cta {
+  display: flex;
+  padding: 11px 23px;
+  text-decoration: none;
+  font-size: 25px;
+  color: white;
+  background: #123;
+  transition: 1s;
+  box-shadow: 6px 6px 0 black;
+  transform: skewX(-15deg);
+  border: none;
+  cursor: pointer;
+}
+
+.cta:focus {
+  outline: none;
+}
+
+.cta:hover {
+  transition: 0.5s;
+  box-shadow: 10px 10px 0 #fbc638;
+}
+
+.cta .second {
+  transition: 0.5s;
+  margin-right: 0px;
+}
+
+.cta:hover .second {
+  transition: 0.5s;
+  margin-right: 45px;
+}
+
+.span {
+  transform: skewX(15deg);
+}
+
+.second {
+  width: 20px;
+  margin-left: 30px;
+  position: relative;
+  top: 12%;
+}
+
+.one {
+  transition: 0.4s;
+  transform: translateX(-60%);
+}
+
+.two {
+  transition: 0.5s;
+  transform: translateX(-30%);
+}
+
+.cta:hover .three {
+  animation: color_anim 1s infinite 0.2s;
+}
+
+.cta:hover .one {
+  transform: translateX(0%);
+  animation: color_anim 1s infinite 0.6s;
+}
+
+.cta:hover .two {
+  transform: translateX(0%);
+  animation: color_anim 1s infinite 0.4s;
+}
+
+@keyframes color_anim {
+  0% {
+    fill: white;
+  }
+
+  50% {
+    fill: #fbc638;
+  }
+
+  100% {
+    fill: white;
+  }
+}
+.add-btn{
+  width:45px;
+  border:none;
+  border-radius:6px;
+  background:skyblue;
+  color:white;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.add-btn.added{
+  background:#198754;
+  cursor:default;
+}
+
+.add-btn:disabled{
+  opacity:0.9;
+}
+button.added{
+  background:#198754;
+  cursor:default;
+}
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: transparent;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.confirm-box {
+  background: #fff;
+  width: 320px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  padding: 15px;
+  animation: scaleIn .15s ease;
+}
+
+.confirm-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #b00020;
+  margin-bottom: 10px;
+}
+
+.confirm-text {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-confirm {
+  background: #d32f2f;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #e0e0e0;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(.9); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+ded{
+  background:#28a745 !important;
+  color:#fff;
+  transform: scale(1.05);
+  transition:.2s;
+}
+
+
+.selected {
+  background-color: #ffeaa7 !important;
+}
+
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #323232;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: .3s;
+  z-index: 10000; /* 👈 أعلى من confirm */
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.toast.success { background:#2e7d32; }
+.toast.error   { background:#c62828; }
+.toast.warning { background:#ed6c02; }
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+}
+
+.modal-box{
+  background:#fff;
+  padding:15px;
+  width:300px;
+  border-radius:8px;
+  box-shadow:0 5px 15px rgba(0,0,0,.3);
+}
+
+.modal-box h3{
+  margin:0 0 10px;
+  font-size:16px;
+}
+
+.modal-box input{
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:space-between;
+}
+
+.modal-actions button{
+  padding:6px 15px;
+  cursor:pointer;
+}
+
+.modal-actions .ok{
+  background:#2e7d32;
+  color:#fff;
+  border:none;
+}
+
+
+thead{
+  background:#f1f3f5;
+}
+
+th, td{
+  padding:6px 8px;
+  border:1px solid #00000022;
+  font-size:13px;
+  vertical-align:middle;
+}
+
+
+
+td.index{
+  width:35px;
+  text-align:center;
+  color:#666;
+}
+
+td.name{
+  text-align:left;
+  font-weight:500;
+}
+
+td.price{
+  text-align:center;
+  color:#2e7d32;
+  font-weight:bold;
+}
+
+td.qty{
+  text-align:center;
+  cursor:pointer;
+  background:#f1f8e9;
+}
+
+td.note{
+  max-width:180px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  cursor:pointer;
+}
+
+td.actions{
+  text-align:center;
+  width:70px;
+}
+
+td.actions button{
+  padding:3px 6px;
+  font-size:11px;
+}
+
+.add-row{
+  background:#fafafa;
+}
+/* زر الطباعة */
+.btn-print {
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #007bff; /* أزرق لطيف */
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-print i {
+  font-size: 16px;
+}
+
+.btn-print:hover {
+  background-color: #0056b3; /* غامق شويه عند المرور */
+  transform: translateY(-1px);
+}
+
+.btn-print:active {
+  transform: translateY(1px);
+}
+
+/* مخفي في الطباعة */
+@media print {
+  .btn-print {
+    display: none;
+  }
+}
+/* تأثير الاهتزاز عند الخطأ */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.input-error {
+  border-color: #ff4d4d !important;
+  background-color: #fff0f0 !important;
+  animation: shake 0.3s ease-in-out;
+  color: #d32f2f !important;
+}
+/* تحسينات للجدول العريض */
+#dafte {
+    min-width: 1000px; /* عرض مناسب لـ 40-45 صنف */
+}
+
+#dafte tbody tr {
+    transition: background 0.15s;
+}
+
+#dafte tbody tr:hover {
+    background: #f8fafc;
+}
+
+#dafte td, #dafte th {
+    box-sizing: border-box;
+}
+
+/* تحسين التمرير الأفقي لو الشاشة صغيرة */
+@media (max-width: 1100px) {
+    #printTable {
+        overflow-x: auto;
+    }
+    
+    #dafte {
+        min-width: 1100px;
+    }
+}
+
+/* تحسينات الطباعة */
+@media print {
+    #dafte {
+        min-width: 100%;
+        font-size: 11pt !important;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    #dafte th {
+        background: #112233 !important;
+        color: white !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
+.btn-warning {
+    background: #ff9800 !important;
+    color: white !important;
+    border: none !important;
+    transition: all 0.2s !important;
+}
+
+.btn-warning:hover {
+    background: #f57c00 !important;
+    transform: scale(0.98) !important;
+}
+
+.btn-warning:active {
+    background: #ef6c00 !important;
+}

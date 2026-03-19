@@ -1,0 +1,58 @@
+/* =====================
+   DARK MODE ONLY
+===================== */
+
+body.dark {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+/* البحث */
+body.dark .searcharea {
+  background: #121a2f;
+  border-color: #334155;
+}
+
+/* الليست */
+body.dark .outerDvFlx {
+  background: #121a2f;
+  border-color: #334155;
+}
+
+/* السعر */
+body.dark .priceTD {
+  background: #0f172a;
+  border-color: #334155;
+}
+
+/* الجداول */
+body.dark table {
+  background: #121a2f;
+}
+
+body.dark th {
+  background: #0f172a;
+}
+
+body.dark tr:nth-child(even) {
+  background: #1e293b;
+}
+
+/* صناديق النتائج */
+body.dark #resultDiv,
+body.dark #resultDivPage {
+  background: #121a2f;
+  color: #e5e7eb;
+}
+
+/* inputs */
+body.dark input {
+  background: #0f172a;
+  color: #e5e7eb;
+  border-color: #334155;
+}
+
+/* نصوص هادية */
+body.dark .td-label {
+  color: #9ca3af;
+}
