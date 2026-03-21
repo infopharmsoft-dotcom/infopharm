@@ -13,66 +13,7 @@
 
 <title>&copy; Infopharm </title>
 <style>
-/* تنسيق عام للحاوية */
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 15px;
-}
 
-/* تحويل الجدول لموبايل ريسبونسيف */
-@media screen and (max-width: 600px) {
-    table {
-        display: block;
-        width: 100%;
-    }
-    
-    thead {
-        display: none; /* إخفاء الهيدر في الموبايل */
-    }
-    
-    tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    td {
-        display: block;
-        text-align: right;
-        border: none;
-        position: relative;
-        padding-right: 50% !important; /* مساحة لعنوان الخانة */
-    }
-
-    /* إضافة عناوين الخانات تلقائياً في الموبايل */
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        right: 10px;
-        width: 45%;
-        font-weight: bold;
-        color: #555;
-        text-align: right;
-    }
-}
-
-/* تنسيق مساحة الإعلانات */
-.ad-space {
-    background: #f9f9f9;
-    border: 1px dashed #ccc;
-    text-align: center;
-    padding: 10px;
-    margin: 20px 0;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #999;
-}
 	
 </style>
 </head>
@@ -152,6 +93,66 @@
 
 			
 <style>
+	/* تنسيق عام للحاوية */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* تحويل الجدول لموبايل ريسبونسيف */
+@media screen and (max-width: 600px) {
+    table {
+        display: block;
+        width: 100%;
+    }
+    
+    thead {
+        display: none; /* إخفاء الهيدر في الموبايل */
+    }
+    
+    tr {
+        display: block;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    td {
+        display: block;
+        text-align: right;
+        border: none;
+        position: relative;
+        padding-right: 50% !important; /* مساحة لعنوان الخانة */
+    }
+
+    /* إضافة عناوين الخانات تلقائياً في الموبايل */
+    td::before {
+        content: attr(data-label);
+        position: absolute;
+        right: 10px;
+        width: 45%;
+        font-weight: bold;
+        color: #555;
+        text-align: right;
+    }
+}
+
+/* تنسيق مساحة الإعلانات */
+.ad-space {
+    background: #f9f9f9;
+    border: 1px dashed #ccc;
+    text-align: center;
+    padding: 10px;
+    margin: 20px 0;
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #999;
+}
     #tableInfo {
         width: 100%;
         border-collapse: separate;
