@@ -10,10 +10,73 @@
     <link rel="stylesheet" href="./lib/font-awesome.min.css">
     <link rel="stylesheet" href="./lib/base.css">
     <link rel="stylesheet" href="./lib/dark.css">
-
+<link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#5757b1">
+    <link rel="apple-touch-icon" href="images/icon-192.png">
 <title>&copy; Infopharm </title>
 <style>
+/* تحسينات التصميم للـ Responsive والـ Desktop */
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .container { max-width: 1100px; margin: 0 auto; padding: 15px; }
 
+        /* منطقة البحث المثبتة */
+        .searcharea {
+            background: #fff;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 10px;
+            z-index: 1000;
+        }
+
+        /* تنسيق كروت النتائج (Grid) */
+        #resultDiv {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* إخفاء الجداول القديمة في حالة البحث النشط */
+        .hidden-on-search { display: none !important; }
+
+        /* تنسيق صفحة الـ More (الجدول المطور) */
+        #tableInfo {
+            width: 100%;
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            #tableInfo tr { display: flex; flex-direction: column; border-bottom: 1px solid #eee; }
+            #tableInfo td { width: 100% !important; border: none !important; text-align: center !important; }
+            #tableInfo td:first-child { background: #f0f2ff; color: #5757b1; font-weight: bold; }
+            #resultDiv { grid-template-columns: 1fr; }
+        }
+
+        /* مساحات إعلانية ذكية */
+        .ad-container {
+            background: #fff;
+            border: 1px dashed #bbb;
+            margin: 15px 0;
+            text-align: center;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 14px;
+            border-radius: 8px;
+        }
+        
+        /* تحسين شكل المدخلات */
+        .form-control { border-radius: 10px; border: 1px solid #ddd; }
+        #inpSearch { border: 2px solid #5757b1; }
 	
 </style>
 </head>
@@ -395,6 +458,51 @@
 <script src="imageDrug.js"></script>
 <script src="showData.js"></script>
 <script src="theme-manager.js"></script>
+	<script>
+    // تفعيل Service Worker للـ PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('SW Registered'))
+            .catch(err => console.log('SW Failed', err));
+        });
+    }
+
+    // إدارة القوائم المنسدلة
+    $(document).on('click', '#searchMode', function(e) {
+        $('#divSlidyInp').slideToggle(200);
+        e.stopPropagation();
+    });
+
+    $(document).on('click', function() {
+        $('#divSlidyInp').slideUp(200);
+    });
+
+    // التحكم في ظهور العناصر عند البحث (لتحسين تجربة الآيفون)
+    $('#inpSearch').on('input', function() {
+        if ($(this).val().length > 0) {
+            $('#defatArea').addClass('hidden-on-search');
+            $('#midAd').show();
+        } else {
+            $('#defatArea').removeClass('hidden-on-search');
+            $('#midAd').hide();
+            $('#resultDiv').html("");
+            $('#tableInfo').hide();
+        }
+    });
+
+    // زر الحذف (X)
+    $('#XDelt').click(function() {
+        $('#inpSearch').val("").trigger('input');
+    });
+
+    function setSearchMode(mode) {
+        let label = "الأسم التجاري";
+        if(mode === 'active') label = "المادة الفعالة";
+        if(mode === 'pharma') label = "الفارماكولوجي";
+        $('#searchMode').val(label);
+    }
+</script>
 <script type="text/javascript">
 
 $(document).ready(function() {
