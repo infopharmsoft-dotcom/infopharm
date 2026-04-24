@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>عن التطبيق - Infopharm</title>
+    <link rel="stylesheet" href="./lib/bootstrap-4.5.3.css">
+    <link rel="stylesheet" href="./lib/base.css">
+    <link rel="stylesheet" href="./lib/fontawesome.css">
+    <link rel="stylesheet" href="./lib/font-awesome.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .about-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .about-header {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .about-header img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid white;
+        }
+        
+        .about-header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .about-header .version {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .about-content {
+            padding: 25px;
+        }
+        
+        .about-section {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .about-section h3 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .about-section p {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 25px 0;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 100px;
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 28px;
+            font-weight: 800;
+            color: #4299e1;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+        
+        .developer-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+        
+        .developer-card h4 {
+            margin-bottom: 10px;
+        }
+        
+        .developer-card p {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #edf2f7;
+            padding: 12px;
+            margin: 8px 20px 20px;
+            border-radius: 60px;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<div id="includeHere"></div>
+
+<div class="about-container">
+    <div class="about-header">
+        <img src="img/logo.png" alt="Infopharm Logo">
+        <h1>Infopharm</h1>
+        <p>دليل الأدوية المصري الشامل</p>
+        <div class="version">الإصدار 2.0.0</div>
+    </div>
+    
+    <div class="about-content">
+        <div class="about-section">
+            <h3>🎯 رؤيتنا</h3>
+            <p>توفير أداة سهلة وسريعة للصيادلة والأطباء والمرضى للوصول إلى معلومات دقيقة عن الأدوية المتوفرة في السوق المصري.</p>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="drugsCount">0</div>
+                <div class="stat-label">دواء مسجل</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10+</div>
+                <div class="stat-label">شركة أدوية</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">دعم فني</div>
+            </div>
+        </div>
+        
+        <div class="about-section">
+            <h3>✨ المميزات</h3>
+            <p>✅ بحث سريع بالاسم التجاري، المادة الفعالة، أو التصنيف الدوائي</p>
+            <p>✅ فلترة الأسعار (جديد/قديم)</p>
+            <p>✅ دفتر نواقص لتنظيم الطلبات</p>
+            <p>✅ معلومات عن الحمل والرضاعة وموانع الاستعمال</p>
+            <p>✅ مماثلات وبدائل دوائية</p>
+            <p>✅ تداخلات دوائية</p>
+            <p>✅ لعبة تعليمية لاختبار المعلومات</p>
+            <p>✅ نظام مالي لإدارة المبيعات</p>
+        </div>
+        
+        <div class="developer-card">
+            <h4>👨‍💻 تم التطوير بواسطة</h4>
+            <p>فريق Infopharm</p>
+            <p style="margin-top: 10px;">📧 support@infopharm.com</p>
+            <p>📱 +20 123 456 789</p>
+        </div>
+        
+        <div class="about-section">
+            <h3>📜 المصادر</h3>
+            <p>البيانات مستمدة من النشرات الداخلية للأدوية (Leaflets) والمراجع الطبية الموثوقة.</p>
+            <p style="font-size: 12px; margin-top: 10px;">آخر تحديث للبيانات: 12.4.2026</p>
+        </div>
+    </div>
+    
+    <div class="back-button" onclick="history.back()">
+        <span>🔙</span> العودة إلى التطبيق
+    </div>
+</div>
+
+<script src="./lib/jquery3.5.1.js"></script>
+<script src="./lib/bootstrap-4.5.3.js"></script>
+<script src="allDrugz.js"></script>
+<script src="include.js"></script>
+
+<script>
+// عرض عدد الأدوية في الإحصاءات
+if (typeof allDrugz !== 'undefined') {
+    document.getElementById('drugsCount').innerText = allDrugz.length;
+}
+</script>
+
+</body>
+</html>

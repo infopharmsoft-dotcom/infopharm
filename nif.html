@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharma Master Pro | نظام المراحل</title>
+    <script src="allDrugz.js"></script>
+    <style>
+        :root {
+            --bg: #1a1a2e;
+            --card: #16213e;
+            --accent: #4dd0e1;
+            --success: #00e676;
+            --danger: #ff5252;
+            --text: #ffffff;
+            --hint: #fbc02d;
+            --locked: #1b262c;
+            --overlay: rgba(0,0,0,0.85);
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+            user-select: none;
+        }
+
+        #game-card {
+            width: 500px;
+            max-width: 95%;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            text-align: center;
+            position: relative;
+            border: 2px solid #1f4068;
+            overflow: hidden;
+        }
+
+        /* نظام الدايلوج المخصص */
+        #custom-dialog {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--overlay);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .dialog-content {
+            background: var(--card);
+            padding: 30px;
+            border-radius: 20px;
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .dialog-btn {
+            margin-top: 20px;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 10px 30px;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        #levels-map {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .level-node {
+            aspect-ratio: 1;
+            background: var(--locked);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: not-allowed;
+            opacity: 0.5;
+            transition: 0.3s;
+            border: 2px solid rgba(255,255,255,0.05);
+            font-size: 1.2rem;
+        }
+
+        .level-node.unlocked {
+            background: #1f4068;
+            cursor: pointer;
+            opacity: 1;
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .level-node.unlocked:hover {
+            transform: scale(1.1);
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .level-node.completed {
+            background: var(--success);
+            color: white;
+            border-color: #fff;
+        }
+
+        #timer-container {
+            width: 100%; height: 10px; background: #0f3460;
+            border-radius: 20px; margin: 15px 0; overflow: hidden;
+        }
+        #timer-bar {
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, var(--accent), #00bcd4);
+            transition: width 0.1s linear;
+        }
+
+        .stats-header {
+            display: flex; justify-content: space-around;
+            font-size: 1.1rem; margin-bottom: 15px;
+            background: rgba(255,255,255,0.03); padding: 12px;
+            border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .question-box {
+            background: #1b262c; padding: 25px; border-radius: 20px;
+            min-height: 110px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            font-size: 1.3rem; font-weight: bold; color: var(--accent);
+            border-left: 5px solid var(--accent); margin-bottom: 25px;
+            box-shadow: inset 5px 5px 15px rgba(0,0,0,0.4);
+        }
+
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+        .option-btn {
+            background: #1f4068; border: 2px solid transparent;
+            padding: 18px 12px; border-radius: 15px; font-size: 0.95rem;
+            color: var(--text); cursor: pointer; transition: all 0.2s;
+            font-weight: bold; min-height: 80px; display: flex;
+            align-items: center; justify-content: center;
+            box-shadow: 0 4px 0 #16213e;
+        }
+
+        .option-btn:hover:not(:disabled) { background: #2a4d7d; border-color: var(--accent); transform: translateY(-3px); }
+        .option-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        #hint-btn {
+            margin-top: 20px; background: var(--hint); color: #1a1a2e;
+            border: none; padding: 10px 25px; border-radius: 50px;
+            font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+        }
+        #hint-btn:disabled { background: #555; color: #888; cursor: not-allowed; filter: grayscale(1); }
+
+        .correct { background: var(--success) !important; color: #fff !important; }
+        .wrong { background: var(--danger) !important; color: #fff !important; }
+        .shake { animation: shakeEffect 0.4s ease-in-out; }
+        @keyframes shakeEffect {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+
+        .back-btn {
+            position: absolute; top: 10px; right: 10px;
+            background: none; border: 1px solid var(--accent);
+            color: var(--accent); border-radius: 10px; cursor: pointer; padding: 5px;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-card">
+    <div id="custom-dialog">
+        <div class="dialog-content">
+            <h3 id="dialog-title">رسالة</h3>
+            <p id="dialog-msg"></p>
+            <button class="dialog-btn" onclick="closeDialog()">متابعة</button>
+        </div>
+    </div>
+
+    <div id="loading-screen">جاري تحضير المساعدات...</div>
+
+    <div id="map-view" style="display:none;">
+        <h2 style="color: var(--accent)">خريطة المراحل (50)</h2>
+        <div id="levels-map"></div>
+    </div>
+
+    <div id="game-view" style="display:none;">
+        <button class="back-btn" onclick="exitToMap()">🔙 خروج</button>
+        <div class="stats-header">
+            <span>النقاط: <b id="score-display">0</b>/10</span>
+            <span>المرحلة: <b id="level-display" style="color:var(--accent)">1</b></span>
+        </div>
+
+        <div id="timer-container"><div id="timer-bar"></div></div>
+        
+        <div class="question-box">
+            <div id="question">--</div>
+        </div>
+
+        <canvas id="hitCanvas" width="160" height="160"></canvas>
+
+        <div class="options-grid" id="options"></div>
+
+        <button id="hint-btn" onclick="useHint()">
+            <span>💡</span> حذف إجابتين
+        </button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('hitCanvas');
+    const ctx = canvas.getContext('2d');
+    let score = 0, currentLevel = 1, rotation = 0, rotationSpeed = 0.05;
+    let timeLeft = 100, timerInterval, currentCorrectDrug = null, validDrugs = [];
+    
+    // الميزة متاحة مرة واحدة فقط في كل مرحلة
+    let hintUsedInLevel = false;
+    let dialogCallback = null;
+
+    let unlockedLevels = JSON.parse(localStorage.getItem('pharmaLevels')) || [1];
+
+    window.onload = function() {
+        if (typeof allDrugz !== 'undefined') {
+            validDrugs = allDrugz.filter(d => {
+                if (!d.active || d.active.length < 3 || !d.name) return false;
+                const components = d.active.replace(/,/g, '+').split('+').filter(p => p.trim().length > 0);
+                return components.length <= 3;
+            });
+            document.getElementById('loading-screen').style.display = 'none';
+            renderMap();
+            draw();
+        }
+    };
+
+    function showDialog(title, msg, callback = null) {
+        document.getElementById('dialog-title').innerText = title;
+        document.getElementById('dialog-msg').innerText = msg;
+        document.getElementById('custom-dialog').style.display = 'flex';
+        dialogCallback = callback;
+    }
+
+    function closeDialog() {
+        document.getElementById('custom-dialog').style.display = 'none';
+        if (dialogCallback) dialogCallback();
+    }
+
+    function renderMap() {
+        document.getElementById('game-view').style.display = 'none';
+        document.getElementById('map-view').style.display = 'block';
+        const mapDiv = document.getElementById('levels-map');
+        mapDiv.innerHTML = '';
+
+        for (let i = 1; i <= 100; i++) {
+            const node = document.createElement('div');
+            node.className = 'level-node';
+            if (unlockedLevels.includes(i)) {
+                node.classList.add('unlocked');
+                node.innerHTML = i;
+                node.onclick = () => startLevel(i);
+                if (unlockedLevels.includes(i + 1)) node.classList.add('completed');
+            } else {
+                node.innerHTML = '🔒';
+            }
+            mapDiv.appendChild(node);
+        }
+    }
+
+    function startLevel(lvl) {
+        currentLevel = lvl;
+        score = 0;
+        hintUsedInLevel = false; // تصفير استخدام المساعدة عند بداية كل مرحلة
+        rotationSpeed = 0.05 + (lvl * 0.005);
+        document.getElementById('map-view').style.display = 'none';
+        document.getElementById('game-view').style.display = 'block';
+        document.getElementById('level-display').innerText = lvl;
+        updateScoreUI();
+        updateHintUI();
+        nextRound();
+    }
+
+    function nextRound() {
+        timeLeft = 100;
+        const randomIndex = Math.floor(Math.random() * validDrugs.length);
+        currentCorrectDrug = validDrugs[randomIndex];
+        document.getElementById('question').innerText = currentCorrectDrug.active.replace(/,/g, ' + ');
+
+        let choices = [currentCorrectDrug.name];
+        while(choices.length < 4) {
+            let r = validDrugs[Math.floor(Math.random() * validDrugs.length)].name;
+            if(!choices.includes(r)) choices.push(r);
+        }
+        choices.sort(() => Math.random() - 0.5);
+
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        choices.forEach(name => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = name;
+            btn.onclick = () => checkAnswer(btn, name);
+            optionsDiv.appendChild(btn);
+        });
+        startTimer();
+    }
+
+    function checkAnswer(btn, name) {
+        clearInterval(timerInterval);
+        const allBtns = document.querySelectorAll('.option-btn');
+        if (name === currentCorrectDrug.name) {
+            btn.classList.add('correct');
+            allBtns.forEach(b => b.style.pointerEvents = 'none');
+            score++;
+            updateScoreUI();
+            if (score >= 10) setTimeout(winLevel, 600);
+            else setTimeout(nextRound, 600);
+        } else {
+            btn.classList.add('wrong');
+            allBtns.forEach(b => {
+                if(b.innerText === currentCorrectDrug.name) b.classList.add('correct');
+                b.style.pointerEvents = 'none';
+            });
+            document.getElementById('game-card').classList.add('shake');
+            setTimeout(() => {
+                document.getElementById('game-card').classList.remove('shake');
+                showDialog("للأسف!", `خطأ، الدواء الصحيح هو: ${currentCorrectDrug.name}. حاول مرة أخرى في هذه المرحلة.`, () => {
+                    startLevel(currentLevel); // إعادة تشغيل المرحلة الحالية
+                });
+            }, 800);
+        }
+    }
+
+    function winLevel() {
+        if (!unlockedLevels.includes(currentLevel + 1) && currentLevel < 50) {
+            unlockedLevels.push(currentLevel + 1);
+            localStorage.setItem('pharmaLevels', JSON.stringify(unlockedLevels));
+        }
+        showDialog("أحسنت!", `تم اجتياز المرحلة ${currentLevel} بنجاح!`, renderMap);
+    }
+
+    function startTimer() {
+        clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timeLeft -= (0.4 + (currentLevel * 0.05)); 
+            document.getElementById('timer-bar').style.width = timeLeft + "%";
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                showDialog("انتهى الوقت!", "حاول أن تكون أسرع في المرة القادمة.", () => {
+                    startLevel(currentLevel);
+                });
+            }
+        }, 100);
+    }
+
+    function useHint() {
+        if (hintUsedInLevel) return;
+        const btns = Array.from(document.querySelectorAll('.option-btn'));
+        let wrongOnes = btns.filter(b => b.innerText !== currentCorrectDrug.name);
+        wrongOnes.sort(() => Math.random() - 0.5);
+        wrongOnes.slice(0, 2).forEach(b => {
+            b.style.visibility = "hidden";
+            b.disabled = true;
+        });
+        hintUsedInLevel = true; // قفل المساعدة لبقية المرحلة
+        updateHintUI();
+    }
+
+    function updateHintUI() {
+        const btn = document.getElementById('hint-btn');
+        btn.disabled = hintUsedInLevel;
+        btn.innerHTML = hintUsedInLevel ? "✅ تم الاستخدام" : "💡 حذف إجابتين";
+    }
+
+    function updateScoreUI() {
+        document.getElementById('score-display').innerText = score;
+    }
+
+    function exitToMap() {
+        clearInterval(timerInterval);
+        renderMap();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.translate(canvas.width/2, canvas.height/2);
+        ctx.rotate(rotation);
+        let color = timeLeft < 30 ? "#ff5252" : "#4dd0e1";
+        ctx.beginPath();
+        ctx.arc(0, 0, 40, 0, Math.PI * 2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        for(let i=0; i<4; i++) {
+            ctx.rotate(Math.PI/2);
+            ctx.fillStyle = color;
+            ctx.fillRect(30, -2, 12, 4);
+        }
+        ctx.restore();
+        rotation += rotationSpeed;
+        requestAnimationFrame(draw);
+    }
+</script>
+</body>
+</html>

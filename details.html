@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>تفاصيل الصنف - Infopharm</title>
+    <link rel="stylesheet" href="./lib/bootstrap-4.5.3.css">
+    <link rel="stylesheet" href="./lib/base.css">
+    <link rel="stylesheet" href="./lib/fontawesome.css">
+    <link rel="stylesheet" href="./lib/font-awesome.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 15px;
+            min-height: 100vh;
+        }
+        
+        #main-content {
+            max-width: 650px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* الهيدر مع الصورة التخيلية */
+        .hero-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px 20px;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+        
+        .drug-icon {
+            font-size: 55px;
+            background: rgba(255,255,255,0.2);
+            width: 85px;
+            height: 85px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .hero-header h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            text-transform: capitalize;
+            letter-spacing: 0.5px;
+        }
+        
+        .hero-header p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin: 0;
+        }
+        
+        /* أزرار الإجراءات */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            padding: 15px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+        }
+        
+        .action-btn.similar {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .action-btn.alternative {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .action-btn.google {
+            background: #ea4335;
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        /* الجدول الرئيسي */
+        .info-grid {
+            padding: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #edf2f7;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 14px;
+            background: #f7fafc;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .info-value {
+            font-size: 15px;
+            color: #2d3748;
+            font-weight: 500;
+            text-align: left;
+            direction: ltr;
+            flex: 1;
+            margin-right: 15px;
+            word-break: break-word;
+        }
+        
+        .price-value {
+            color: #e53e3e;
+            font-size: 24px;
+            font-weight: 800;
+        }
+        
+        .old-price {
+            font-size: 14px;
+            color: #a0aec0;
+            text-decoration: line-through;
+            margin-right: 8px;
+        }
+        
+        /* الكروت */
+        .detail-card {
+            margin: 16px 20px;
+            padding: 16px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+        
+        .detail-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .card-content {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #4a5568;
+            white-space: pre-line;
+			text-align:right
+        }
+        
+        /* شارات الأمان */
+        .safety-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+        
+        .badge-preg-A { background: #c6f6d5; color: #22543d; }
+        .badge-preg-B { background: #c6f6d5; color: #22543d; }
+        .badge-preg-C { background: #feebc8; color: #7b341e; }
+        .badge-preg-D { background: #fed7d7; color: #742a2a; }
+        .badge-preg-X { background: #feb2b2; color: #9b2c2c; }
+        
+        /* البدائل - تنسيق من اليمين لليسار */
+        .alternatives-section {
+            background: #f8fafc;
+            padding: 20px;
+            margin-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #2d3748;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .group-header {
+            background: white;
+            padding: 10px 16px;
+            border-radius: 14px;
+            margin: 12px 0 10px;
+            font-weight: 700;
+            font-size: 14px;
+            color: #2c5282;
+            border-right: 4px solid #4299e1;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .alt-item {
+            background: white;
+            border-radius: 16px;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            direction: rtl;
+        }
+        
+        .alt-item:active {
+            transform: scale(0.98);
+            background: #f7fafc;
+        }
+        
+        .alt-info {
+            text-align: right;
+        }
+        
+        .alt-name {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 14px;
+            text-transform: capitalize;
+        }
+        
+        .alt-price {
+            color: #e53e3e;
+            font-weight: 800;
+            font-size: 16px;
+            text-align: right;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #edf2f7;
+            padding: 12px;
+            margin: 8px 20px 20px;
+            border-radius: 60px;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+        
+        .interaction-warning {
+            background: #fff5f5;
+            border-right: 4px solid #fc8181;
+            padding: 12px;
+            border-radius: 12px;
+            margin: 10px 20px;
+            font-size: 13px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #718096;
+        }
+        
+        hr {
+            margin: 8px 0;
+            border-color: #e2e8f0;
+        }
+        
+        /* تنسيق دواعي الاستعمال للحفاظ على HTML */
+        .card-content ul, .card-content ol {
+            padding-right: 20px;
+            margin: 8px 0;
+        }
+        
+        .card-content li {
+            margin-bottom: 5px;
+        }
+        
+        .card-content br {
+            display: block;
+            margin: 5px 0;
+        }
+        
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+            .info-value { font-size: 13px; }
+            .price-value { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="main-content" style="display: none;">
+    <!-- الهيدر -->
+    <div class="hero-header">
+        <div class="drug-icon" id="drug-icon">💊</div>
+        <h2 id="d-name"></h2>
+        <p id="d-arabic"></p>
+    </div>
+    
+    <!-- أزرار الإجراءات -->
+    <div class="action-buttons">
+        <button class="action-btn similar" id="btn-similar">
+            🔄 مماثلات
+        </button>
+        <button class="action-btn alternative" id="btn-alternative">
+            💊 بدائل
+        </button>
+        <a href="#" id="btn-google-images" class="action-btn google" target="_blank">
+            🖼️ صور جوجل
+        </a>
+    </div>
+    
+    <!-- المعلومات الأساسية -->
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="info-label">🧪 المادة الفعالة</span>
+            <span class="info-value" id="d-active" style="color:#2b6cb0; direction: ltr; text-align: left;"></span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">💰 السعر</span>
+            <span class="info-value">
+                <span class="price-value" id="d-price"></span>
+                <span class="old-price" id="d-oldprice"></span>
+            </span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">🏭 الشركة</span>
+            <span class="info-value" id="d-company" style="direction: ltr; text-align: left;"></span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">📦 الشكل الدوائي</span>
+            <span class="info-value" id="d-form" style="direction: ltr; text-align: left;"></span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">📋 طريقة الاستخدام</span>
+            <span class="info-value" id="d-route" style="direction: ltr; text-align: left;"></span>
+        </div>
+        
+        <div class="info-item">
+            <span class="info-label">📅 آخر تحديث</span>
+            <span class="info-value" id="d-update-date"></span>
+        </div>
+    </div>
+    
+    <!-- فارماكولوجي -->
+    <div class="detail-card">
+        <div class="card-title">📚 التصنيف الدوائي (الفارماكولوجي)</div>
+        <div class="card-content" id="d-pharmaco"></div>
+    </div>
+    
+    <!-- دواعي الاستعمال -->
+    <div class="detail-card">
+        <div class="card-title">📘 دواعي الاستعمال</div>
+        <div class="card-content" id="d-indications"></div>
+    </div>
+    
+    <!-- الحمل والرضاعة -->
+    <div class="detail-card">
+        <div class="card-title">🤰 الحمل والرضاعة</div>
+        <div class="card-content">
+            <div id="d-pregnancy" style="margin-bottom: 8px;"></div>
+            <div id="d-lactation"></div>
+        </div>
+    </div>
+    
+    <!-- موانع الاستعمال -->
+    <div class="detail-card">
+        <div class="card-title">⚠️ موانع الاستعمال والتنبيهات</div>
+        <div class="card-content" id="d-warnings"></div>
+    </div>
+    
+    <!-- الوصف العلمي -->
+    <div class="detail-card">
+        <div class="card-title">🔬 الوصف العلمي</div>
+        <div class="card-content" id="d-scientific"></div>
+    </div>
+    
+    <!-- زر العودة -->
+    <div class="back-button" onclick="history.back()">
+        <span>🔙</span> العودة إلى البحث
+    </div>
+</div>
+
+<!-- قسم البدائل -->
+<div class="alternatives-section" id="alt-section" style="display: none;">
+    <div class="section-title">
+        <span>💊</span> بدائل متاحة (نفس المادة الفعالة)
+    </div>
+    <div id="alt-list"></div>
+</div>
+
+<div id="interaction-warning" class="interaction-warning" style="display: none;"></div>
+<div id="toast" class="toast" style="display:none;"></div>
+
+<script src="allDrugz.js"></script>
+<script src="indications.js"></script>
+<script src="interactionsDB.js"></script>
+<script src="showData.js"></script>
+
+<script>
+// ===================== TOAST FUNCTION =====================
+function showToastMessage(msg, type = "success") {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = "block";
+    toast.className = `toast show ${type}`;
+    setTimeout(() => { 
+        toast.style.display = "none";
+        toast.className = "toast";
+    }, 2500);
+}
+
+// ===================== دوال مساعدة =====================
+function formatDate(timestamp) {
+    if (!timestamp) return "غير متاح";
+    const date = new Date(parseInt(timestamp));
+    if (isNaN(date.getTime())) return "غير متاح";
+    // تنسيق التاريخ كـ يوم/شهر/سنة (1/1/2026)
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+function getDrugIcon(form) {
+    const f = (form || "").toLowerCase();
+    if (f.includes('tablet') || f.includes('cap')) return '💊';
+    if (f.includes('syrup') || f.includes('susp')) return '🧪';
+    if (f.includes('inject') || f.includes('vial') || f.includes('amp')) return '💉';
+    if (f.includes('cream') || f.includes('gel') || f.includes('oint')) return '🧴';
+    if (f.includes('drop')) return '💧';
+    if (f.includes('spray')) return '🌬️';
+    if (f.includes('supp')) return '🔻';
+    return '💊';
+}
+
+function translateRoute(route) {
+    if (!route) return "طريق غير محدد";
+    const r = route.toLowerCase();
+    if (r.includes('eye')) return 'قطرة للعين';
+    if (r.includes('ear')) return 'قطرة للأذن';
+    if (r.includes('nasal')) return 'بخاخ للأنف';
+    if (r.includes('injection')) return 'حقن';
+    if (r.includes('tablet') || r.includes('capsule')) return 'أقراص / كبسولات عن طريق الفم';
+    if (r.includes('syrup') || r.includes('suspension')) return 'شراب / معلق';
+    if (r.includes('topical') || r.includes('cream') || r.includes('gel')) return 'دهان موضعي';
+    if (r.includes('rectal')) return 'تحاميل (لبوس)';
+    return route;
+}
+
+// ===================== عرض البدائل (من اليمين للشمال) =====================
+function findAlternatives(activeIngredient, currentName) {
+    if (!activeIngredient || typeof allDrugz === 'undefined') return;
+    
+    const targetActive = activeIngredient.toLowerCase().trim();
+    const altListContainer = document.getElementById('alt-list');
+    const altSection = document.getElementById('alt-section');
+    
+    const matches = allDrugz.filter(d => 
+        d.active && 
+        d.active.toLowerCase().trim() === targetActive && 
+        d.name !== currentName
+    );
+    
+    if (matches.length > 0) {
+        altSection.style.display = 'block';
+        
+        const groups = {
+            'أقراص وكبسولات': { icon: '💊', list: [], keywords: ['tab', 'cap', 'pill', 'sachet'] },
+            'شراب ومعلق': { icon: '🧪', list: [], keywords: ['syrup', 'susp', 'drops', 'oral'] },
+            'حقن وأمبولات': { icon: '💉', list: [], keywords: ['inj', 'vial', 'amp', 'infusion'] },
+            'كريمات ودهانات': { icon: '🧴', list: [], keywords: ['cream', 'gel', 'oint', 'lotion'] },
+            'أشكال أخرى': { icon: '📦', list: [], keywords: [] }
+        };
+        
+        matches.forEach(alt => {
+            const form = (alt.dosage_form || "").toLowerCase();
+            let foundGroup = false;
+            for (let key in groups) {
+                if (groups[key].keywords.some(k => form.includes(k))) {
+                    groups[key].list.push(alt);
+                    foundGroup = true;
+                    break;
+                }
+            }
+            if (!foundGroup) groups['أشكال أخرى'].list.push(alt);
+        });
+        
+        let finalHtml = '';
+        for (let key in groups) {
+            if (groups[key].list.length > 0) {
+                finalHtml += `
+                    <div class="group-header">
+                        <span>${groups[key].icon}</span>
+                        <span style="margin-right: 8px;">${key}</span>
+                    </div>
+                `;
+                groups[key].list.forEach(alt => {
+                    finalHtml += `
+                        <div class="alt-item" onclick="location.href='details.html?n=' + encodeURIComponent('${alt.name}')">
+                            <div class="alt-info">
+                                <div class="alt-name">${alt.name}</div>
+                                <small style="color:#718096; font-size: 11px;">${alt.dosage_form || ''}</small>
+                            </div>
+                            <div class="alt-price">${parseFloat(alt.price).toFixed(2)} ج.م</div>
+                        </div>
+                    `;
+                });
+            }
+        }
+        altListContainer.innerHTML = finalHtml;
+    }
+}
+
+// ===================== عرض التداخلات =====================
+function showInteractions(activeIngredient) {
+    const container = document.getElementById('interaction-warning');
+    if (!container || typeof interactionsDB === 'undefined') return;
+    
+    const activeLower = (activeIngredient || "").toLowerCase();
+    let interactions = [];
+    
+    Object.keys(interactionsDB).forEach(dbKey => {
+        if (activeLower.includes(dbKey.toLowerCase())) {
+            interactionsDB[dbKey].forEach(inter => {
+                interactions.push(`⚠️ مع ${inter.withDrug}: ${inter.message}`);
+            });
+        }
+    });
+    
+    if (interactions.length > 0) {
+        container.style.display = 'block';
+        container.innerHTML = `<strong>🚨 تنبيهات التداخلات الدوائية:</strong><br>${interactions.join('<br>')}`;
+    }
+}
+
+// ===================== الانتقال للبحث عن مماثلات =====================
+function searchSimilar(activeSub) {
+    if (activeSub) {
+        localStorage.setItem('searchType', 'similar');
+        localStorage.setItem('searchValue', activeSub);
+        window.location.href = 'index.html';
+    } else {
+        showToastMessage("لا توجد مادة فعالة للبحث", "error");
+    }
+}
+
+// ===================== الانتقال للبحث عن بدائل =====================
+function searchAlternative(description, active) {
+    if (description) {
+        localStorage.setItem('searchType', 'alternative');
+        localStorage.setItem('searchValue', description);
+        localStorage.setItem('currentActive', active || '');
+        window.location.href = 'index.html';
+    } else {
+        showToastMessage("لا يوجد وصف دوائي للبحث", "error");
+    }
+}
+
+// ===================== فتح صور جوجل =====================
+function openGoogleImages(drugName) {
+    if (drugName) {
+        const searchQuery = encodeURIComponent(`${drugName} دواء`);
+        window.open(`https://www.google.com/search?q=${searchQuery}&tbm=isch`, '_blank');
+    } else {
+        showToastMessage("لا يوجد اسم للبحث", "error");
+    }
+}
+
+// ===================== معالجة النصوص HTML =====================
+function processHtmlContent(content) {
+    if (!content) return "لا توجد معلومات";
+    // إذا كان المحتوى يحتوي على HTML tags، اعرضه كما هو
+    if (content.includes('<br') || content.includes('<b>') || content.includes('<ul>') || content.includes('<ol>')) {
+        return content;
+    }
+    // إذا كان نص عادي، استبدل الأسطر الجديدة بـ <br>
+    return content.replace(/\n/g, '<br>');
+}
+
+// ===================== الصفحة الرئيسية =====================
+let currentDrug = null;
+
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const drugName = urlParams.get('n');
+    
+    if (!drugName || typeof allDrugz === 'undefined') {
+        document.body.innerHTML = '<div class="loading">❌ لم يتم العثور على الدواء</div>';
+        return;
+    }
+    
+    currentDrug = allDrugz.find(d => d.name === drugName);
+    
+    if (!currentDrug) {
+        document.body.innerHTML = '<div class="loading">❌ الصنف غير موجود في قاعدة البيانات</div>';
+        return;
+    }
+    
+    // إظهار المحتوى
+    const mainContent = document.getElementById('main-content');
+    mainContent.style.display = 'block';
+    
+    // تحديث العناصر
+    const updateText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text || "غير محدد";
+    };
+    
+    const updateHtml = (id, html) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html || "غير محدد";
+    };
+    
+    // البيانات الأساسية
+    updateText('d-name', currentDrug.name);
+    updateText('d-arabic', currentDrug.arabic || currentDrug.name);
+    updateText('d-active', currentDrug.active || "غير مسجل");
+    updateText('d-price', `${parseFloat(currentDrug.price || 0).toFixed(2)} ج.م`);
+    updateText('d-oldprice', currentDrug.oldprice ? `${parseFloat(currentDrug.oldprice).toFixed(2)} ج.م` : "");
+    updateText('d-company', currentDrug.company || "غير مسجلة");
+    updateText('d-form', currentDrug.dosage_form || "غير محدد");
+    updateText('d-route', translateRoute(currentDrug.route));
+    updateText('d-update-date', formatDate(currentDrug.Date_updated));
+    updateText('d-pharmaco', currentDrug.description || "لا يوجد وصف دوائي");
+    updateText('d-scientific', currentDrug.details || currentDrug.description || "لا توجد معلومات علمية إضافية");
+    
+    // تغيير الأيقونة حسب الشكل الدوائي
+    document.getElementById('drug-icon').innerHTML = getDrugIcon(currentDrug.dosage_form);
+    
+    // ===================== دواعي الاستعمال =====================
+    const activeKey = (currentDrug.active || "").toLowerCase().trim();
+    const indicationsData = (typeof indicationsDB !== 'undefined') ? indicationsDB[activeKey] : null;
+    
+    if (indicationsData && typeof indicationsData === 'object') {
+        const form = (currentDrug.dosage_form || "").toLowerCase();
+        let usageText = indicationsData.usage?.default || "لا توجد دواعي استعمال مسجلة";
+        
+        if (form.includes('tablet') || form.includes('capsule')) {
+            usageText = indicationsData.usage?.tablet || usageText;
+        } else if (form.includes('suspension') || form.includes('syrup')) {
+            usageText = indicationsData.usage?.suspension || usageText;
+        } else if (form.includes('vial') || form.includes('ampoule') || form.includes('injection')) {
+            usageText = indicationsData.usage?.vial || usageText;
+        } else if (form.includes('drop')) {
+            usageText = indicationsData.usage?.oral_drops || usageText;
+        }
+        
+        // عرض دواعي الاستعمال مع الحفاظ على تنسيق HTML
+        updateHtml('d-indications', processHtmlContent(usageText));
+        
+        const pregCat = indicationsData.safety?.preg || "غير محدد";
+        const pregNote = indicationsData.safety?.pregNote || "";
+        const pregColor = {
+            'A': 'badge-preg-A', 'B': 'badge-preg-A', 'C': 'badge-preg-C',
+            'D': 'badge-preg-D', 'X': 'badge-preg-X'
+        };
+        updateHtml('d-pregnancy', `
+            <span class="safety-badge ${pregColor[pregCat] || ''}">فئة ${pregCat}</span>
+            <span style="margin-right: 10px;">${pregNote}</span>
+        `);
+        
+        const lactCat = indicationsData.safety?.lact || "L2";
+        const lactNote = indicationsData.safety?.lactNote || "آمن تحت إشراف طبي";
+        updateHtml('d-lactation', `
+            <span class="safety-badge badge-preg-C">${lactCat}</span>
+            <span style="margin-right: 10px;">${lactNote}</span>
+        `);
+        
+        let contraText = indicationsData.safety?.contra || "لا توجد موانع استعمال خاصة";
+        if (indicationsData.safety?.needsTest) {
+            contraText = "⚠️ يتطلب إجراء اختبار حساسية قبل الاستخدام!\n\n" + contraText;
+        }
+        updateText('d-warnings', contraText);
+    } else {
+        updateHtml('d-indications', processHtmlContent(currentDrug.indications || "لم يتم تحديد دواعي الاستعمال"));
+        updateHtml('d-pregnancy', `<span>فئة C (دراسات غير كافية)</span>`);
+        updateHtml('d-lactation', `<span>آمن تحت إشراف طبي</span>`);
+        updateText('d-warnings', currentDrug.warnings || "الحساسية لأي من المكونات");
+    }
+    
+    // ===================== أزرار الإجراءات =====================
+    document.getElementById('btn-similar').onclick = function() {
+        searchSimilar(currentDrug.active);
+    };
+    
+    document.getElementById('btn-alternative').onclick = function() {
+        searchAlternative(currentDrug.description, currentDrug.active);
+    };
+    
+    document.getElementById('btn-google-images').onclick = function(e) {
+        e.preventDefault();
+        openGoogleImages(currentDrug.name);
+    };
+    
+    // عرض البدائل
+    findAlternatives(currentDrug.active, currentDrug.name);
+    
+    // عرض التداخلات
+    showInteractions(currentDrug.active);
+    
+    // التمرير للأعلى
+    window.scrollTo(0, 0);
+};
+</script>
+
+</body>
+</html>

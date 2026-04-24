@@ -7,490 +7,1030 @@
 <link href='./lib/bootstrap-4.5.3.css' rel='stylesheet'/>
 <script src='./lib/bootstrap-4.5.3.js'></script>
 <link href='./lib/fontawesome.css' rel='stylesheet'/>
-    <link rel="stylesheet" href="./lib/font-awesome.min.css">
-    <link rel="stylesheet" href="./lib/base.css">
-    <link rel="stylesheet" href="./lib/dark.css">
-<link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#5757b1">
-    <link rel="apple-touch-icon" href="images/icon-192.png">
-<title>&copy; Infopharm </title>
+<link rel="stylesheet" href="./lib/font-awesome.min.css">
+<link rel="stylesheet" href="./lib/base.css">
+<link rel="stylesheet" href="./lib/dark.css">
 
+<title>&copy; Infopharm</title>
+
+<style>
+    .input-error {
+        border: 2px solid red !important;
+        background-color: #ffe6e6 !important;
+        animation: shake 0.3s ease-in-out;
+    }
+    
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    
+    .add-btn {
+        background: #ffc107;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 16px;
+        min-width: 45px;
+    }
+    
+    .add-btn:hover {
+        background: #ff9800;
+        transform: scale(1.05);
+    }
+    
+    .add-btn.added {
+        background: #6c757d;
+        color: white;
+        cursor: default;
+    }
+    
+    .add-btn.added:hover {
+        transform: none;
+    }
+    
+    .metaBtnn {
+        transition: all 0.2s ease;
+    }
+    
+    .metaBtnn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    
+    .confirm-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+    
+    .confirm-box {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        width: 90%;
+        max-width: 350px;
+        text-align: center;
+        direction: rtl;
+    }
+    
+    .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 8px;
+        z-index: 3000;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+    
+    .toast.show {
+        opacity: 1;
+    }
+    
+    .toast.success { background: #4caf50; }
+    .toast.error { background: #f44336; }
+    .toast.warning { background: #ff9800; }
+    .toast.info { background: #2196f3; }
+
+    #resultDiv::-webkit-scrollbar {
+        width: 5px;
+    }
+    
+    #resultDiv::-webkit-scrollbar-thumb {
+        background: #5757b1;
+        border-radius: 10px;
+    }
+    
+    .alertResulte {
+        text-align: center;
+        padding: 30px;
+        color: #666;
+    }
+    
+    .tableDa td, .tableDa th {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: center;
+    }
+    
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+    
+    .modal-box {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        width: 90%;
+        max-width: 350px;
+        text-align: center;
+        direction: rtl;
+    }
+    
+    .modal-box input {
+        width: 100%;
+        padding: 10px;
+        margin: 15px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .modal-actions button {
+        padding: 8px 20px;
+        margin: 0 5px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .modal-actions button.ok {
+        background: #4caf50;
+        color: white;
+    }
+    
+    .confirm-input {
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+    
+    .btn-ok {
+        background: #4caf50;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .btn-cancel {
+        background: #757575;
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+	/* ===================== الإعدادات العامة للثيم ===================== */
+:root {
+  --text-color: #333333;
+  --bg-color: #ffffff;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --primary-color: #5757b1;
+  --secondary-color: #7a7adb;
+  --success-color: #4caf50;
+  --danger-color: #f44336;
+  --warning-color: #ff9800;
+}
+
+body.dark {
+  --text-color: #e2e8f0;
+  --bg-color: #1a1a2e;
+  --card-bg: #16213e;
+  --border-color: #2d3748;
+  --primary-color: #7a7adb;
+  --secondary-color: #9f9fff;
+}
+
+body {
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+body.dark .drugCard,
+body.dark .detail-card,
+body.dark .privacy-container,
+body.dark .guide-container,
+body.dark .about-container,
+body.dark .disclaimer-container {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+body.dark .info-label {
+  background: #2d3748;
+  color: #e2e8f0;
+}
+
+body.dark .info-item {
+  border-bottom-color: var(--border-color);
+}
+
+body.dark .searcharea {
+  background: var(--card-bg) !important;
+}
+
+body.dark .form-control {
+  background: #2d3748;
+  color: #e2e8f0;
+  border-color: var(--border-color);
+}
+
+/* ===================== لوحة الإعدادات ===================== */
+.settings-panel {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  z-index: 1001;
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  direction: rtl;
+}
+
+.settings-header {
+  background: linear-gradient(135deg, #5757b1, #7a7adb);
+  color: white;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.settings-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.settings-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.settings-content {
+  padding: 15px;
+}
+
+.setting-item {
+  margin-bottom: 20px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #5757b1;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.font-size-control input {
+  flex: 1;
+}
+
+.font-size-control span {
+  min-width: 50px;
+  text-align: center;
+}
+
+.reset-btn {
+  width: 100%;
+  padding: 10px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.reset-btn:hover {
+  background: #d32f2f;
+}
+
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #5757b1;
+  color: white;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+}
+
+.settings-btn:hover {
+  transform: scale(1.1);
+  background: #7a7adb;
+}
+</style>
 </head>
 <body>
 
 <div id="includeHere"></div>
-   <p style="text-align:center;" id="example"><span style="color:green;font-size:25px"> ( aug*1*tab) </span> يمكنك استخدم علامة النجمة (*) أو المسافة للهروب من الحروف المجهوله</p>
+<p style="padding:5px;text-align:center;" id="example"><span style="color:green;font-size:25px"> 12.4.2026 </span>اخر تحديث للأصناف والأسعار</p>
 
 <div align="center" class="container">
 
-
-
-
-
-
-<div class="searcharea" style="margin:10px auto;position:sticky;top:0;z-index:1000;">
- 
-<span id="len-item"></span>
-
-<div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:nowrap">
-
-    <!-- البحث + زر السعر -->
-    <div style="display:flex; align-items:center; gap:5px; flex:1; min-width:0;">
-        <div style="flex-grow:1; position:relative;">
-            <input placeholder="يمكنك البحث باللغة العربية أو الأنجليزية"
-                   class="form-control"
-                   id="inpSearch"
-                   type="text"
-                   style="line-height:30px; font-size:23px; width:100%;" autofocus />
-
-            <span id="XDelt"
-                  style="position:absolute; right:15px; top:50%;
-                  transform:translateY(-50%); font-size:25px;
-                  color:#D8D8D8; cursor:pointer;">x</span>
+<div class="searcharea" style="margin:10px auto;position:sticky;top:0;z-index:1000;background:white;padding:10px;border-radius:15px;box-shadow:0 2px 10px rgba(0,0,0,0.1);">
+    <span id="len-item"></span>
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex; align-items:center; gap:5px; flex:1; min-width:200px;">
+            <div style="flex-grow:1; position:relative;">
+                <input placeholder="🔍 يمكنك البحث باللغة العربية أو الأنجليزية"
+                       class="form-control"
+                       id="inpSearch"
+                       type="text"
+                       style="line-height:30px; font-size:18px; width:100%; padding-right:35px;" autofocus />
+                <span id="XDelt" style="position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:20px; color:#ccc; cursor:pointer;">✖</span>
+            </div>
+            <a href="nif.html" title="اللعبة التعليمية" class="btn btn-warning" style="font-size:18px; padding:5px 12px;">🎮</a>
+            <a href="cash.html" title="النظام الإداري المالي" class="btn btn-success" style="display:none;font-size:18px; padding:5px 12px;">📊</a>
+            <button id="btnTogglePrice" class="btn btn-info" style="font-size:18px; padding:5px 12px;">💰</button>
         </div>
-
-        <button id="btnTogglePrice"
-                class="btn btn-info"
-                style="font-size:20px; padding:5px 14px; white-space:nowrap;">
-            💰
-        </button>
+        <div class="search-mode-wrap">
+            <span class="search-mode-icon">⚙</span>
+            <input readonly id="searchMode" value="الأسم التجاري" style="padding:5px 10px;border-radius:8px;border:1px solid #ddd;" />
+            <div id="divSlidyInp" class="divSlidyInp" style="display:none; position:absolute; background:white; border:1px solid #ddd; border-radius:8px; padding:5px; z-index:100;">
+                <div class="spanSlidy" style="padding:8px; cursor:pointer;">الأسم التجاري</div>
+                <div class="spanSlidy" style="padding:8px; cursor:pointer;">المادة الفعالة</div>
+                <div class="spanSlidy" style="padding:8px; cursor:pointer;">الفارماكولوجي</div>
+            </div>
+        </div>
     </div>
-
-   
-
-<!-- نوع البحث -->
-<div class="search-mode-wrap">
-    <span class="search-mode-icon">⚙</span>
-    <input readonly id="searchMode" value="الأسم التجاري" />
-
-    <div id="divSlidyInp" class="divSlidyInp">
-        <div class="spanSlidy" onclick="setSearchMode('name')">الأسم التجاري</div>
-        <div class="spanSlidy" onclick="setSearchMode('active')">المادة الفعالة</div>
-        <div class="spanSlidy" onclick="setSearchMode('pharma')">الفارماكولوجي</div>
-    </div>
-</div>
-
-
-</div>
-
-<div id="box_price" style="display:none; padding:12px 0;">
+    
+    <div id="box_price" style="display:none; padding:12px 0; margin-top:10px; border-top:1px solid #eee;">
         <div style="display:flex; gap:10px; margin-bottom:10px;">
-            <input placeholder="Min" class="form-control" id="minPrice" type="number">
-            <input placeholder="Max" class="form-control" id="maxPrice" type="number">
+            <input placeholder="الحد الأدنى للسعر" class="form-control" id="minPrice" type="number">
+            <input placeholder="الحد الأقصى للسعر" class="form-control" id="maxPrice" type="number">
         </div>
         <div style="display:flex; justify-content:center; align-items:center; gap:10px; font-size:13px;">
-            <span>جديد</span>
+            <span>السعر الجديد</span>
             <div class="custom-control custom-switch">
                 <input type="checkbox" class="custom-control-input" id="priceTypeSwitch">
                 <label class="custom-control-label" for="priceTypeSwitch"></label>
             </div>
-            <span>قديم</span>
+            <span>السعر القديم</span>
         </div>
     </div>
-<div id="resultDiv" style="position:absolute;margin:3px auto;width:100%;z-index:99;background:#fff;max-height:70vh;overflow:scroll;overflow-x: hidden;"></div>
-
-
-			
-<style>
-	/* تنسيق عام للحاوية */
-.container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 15px;
-}
-
-/* تحويل الجدول لموبايل ريسبونسيف */
-@media screen and (max-width: 600px) {
-    table {
-        display: block;
-        width: 100%;
-    }
     
-    thead {
-        display: none; /* إخفاء الهيدر في الموبايل */
-    }
-    
-    tr {
-        display: block;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        overflow: hidden;
-    }
-    
-    td {
-        display: block;
-        text-align: right;
-        border: none;
-        position: relative;
-        padding-right: 50% !important; /* مساحة لعنوان الخانة */
-    }
+    <div id="resultDiv" style="position:absolute; left:0; right:0; margin:3px auto; width:100%; z-index:99; background:#fff; max-height:70vh; overflow-y:auto; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.15);"></div>
+</div>
 
-    /* إضافة عناوين الخانات تلقائياً في الموبايل */
-    td::before {
-        content: attr(data-label);
-        position: absolute;
-        right: 10px;
-        width: 45%;
-        font-weight: bold;
-        color: #555;
-        text-align: right;
-    }
-}
-
-/* تنسيق مساحة الإعلانات */
-.ad-space {
-    background: #f9f9f9;
-    border: 1px dashed #ccc;
-    text-align: center;
-    padding: 10px;
-    margin: 20px 0;
-    min-height: 90px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    color: #999;
-}
-    #tableInfo {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0;
-        background-color: #ffffff;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-        font-family: 'Segoe UI', Arial, sans-serif;
-        margin: 20px 0;
-        direction: rtl;
-        border: 1px solid #e0e0e0;
-    }
-
-    #tableInfo thead {
-        background: linear-gradient(135deg, #5757b1, #7a7adb);
-        color: white;
-    }
-
-    #tableInfo th {
-        padding: 18px;
-        text-align: right;
-        font-size: 16px;
-    }
-
-    #tableInfo td {
-        padding: 14px 20px;
-        border-bottom: 1px solid #f1f1f1;
-        color: #333;
-        vertical-align: middle;
-    }
-
-    /* عمود المعلومات (اليمين) */
-    #tableInfo td:first-child {
-        background-color: #f9faff;
-        color: #5757b1;
-        font-weight: 600;
-        width: 30%;
-        border-left: 1px solid #f0f0f0;
-    }
-
-    /* عمود القيم (اليسار) */
-    #tableInfo td:last-child {
-        width: 70%;
-        color: #444;
-        text-align: right;
-    }
-
-    #tableInfo tr:hover td {
-        background-color: #f5f5ff;
-    }
-
-    #largeImage img {
-        max-width: 120px;
-        border-radius: 10px;
-    }
-</style>
 <table id="tableInfo" style="display: none; width: 100%; border-collapse: collapse; margin-top: 10px; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
     <thead>
         <tr style="background: linear-gradient(135deg, #5757b1, #7a7adb); color: white;">
-            <th style="padding: 12px; text-align: right; border: 1px solid #ddd; font-size: 14px;">المعلومات</th>
-            <th style="padding: 12px; text-align: right; border: 1px solid #ddd; font-size: 14px;">القيمة</th>
+            <th style="padding: 12px; text-align: right; font-size: 14px;">المعلومات</th>
+            <th style="padding: 12px; text-align: right; font-size: 14px;">القيمة</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">صورة الدواء</td>
-            <td class="image-cell" style="padding: 10px; border: 1px solid #ddd;">
-                <div id="largeImage"></div>
-            </td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">صورة الدواء</td><td><div id="largeImage"></div></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الاسم التجاري</td>
-            <td id="name" style="padding: 10px; border: 1px solid #ddd; font-weight: bold;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الاسم التجاري</td><td id="name" style="font-weight: bold;"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الاسم بالعربي</td>
-            <td id="nameArabic" style="padding: 10px; border: 1px solid #ddd;"></td> 
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الاسم بالعربي</td><td id="nameArabic"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">المادة الفعالة</td>
-            <td id="active" style="padding: 10px; border: 1px solid #ddd; color: #5757b1;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">المادة الفعالة</td><td id="active" style="color: #5757b1;"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">السعر الجديد</td>
-            <td id="price" style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: #2e7d32;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">السعر الجديد</td><td id="price" style="font-weight: bold; color: #2e7d32;"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">السعر القديم</td>
-            <td id="oldprice" style="padding: 10px; border: 1px solid #ddd; text-decoration: line-through; color: #d32f2f;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">السعر القديم</td><td id="oldprice" style="text-decoration: line-through; color: #d32f2f;"></td>
+        </td>
+        <tr><td style="padding: 10px; font-weight: bold;">🤰 فئة الحمل</td><td id="pregSafety">--</td>
         </tr>
-        
-        <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">🤰 فئة الحمل</td>
-            <td id="pregSafety" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">--</td>
+        <tr><td style="padding: 10px; font-weight: bold;">🍼 الرضاعة الطبيعية</td><td id="lactSafety">--</td>
         </tr>
-        <tr style="background-color: #f9f9f9;">
-            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">🍼 الرضاعة الطبيعية</td>
-            <td id="lactSafety" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px;">--</td>
+        <tr><td style="padding: 10px; font-weight: bold; color: #e65100;">🚫 موانع الاستعمال</td><td id="contraindications">--</td>
         </tr>
-        <tr style="background-color: #fff3e0;">
-            <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold; color: #e65100;">🚫 موانع الاستعمال</td>
-            <td id="contraindications" style="padding: 10px; border: 1px solid #ddd; font-weight: 500;">--</td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الفارماكولوجي</td><td id="description"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الفارماكولوجي</td>
-            <td id="description" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الشكل الدوائي</td><td id="dosage_form"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الشكل الدوائي</td>
-            <td id="dosage_form" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">دواعي الاستخدام</td><td id="category" style="color: #2d8a2d; font-weight: bold;"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">دواعي الاستخدام</td>
-            <td id="category" style="padding: 10px; border: 1px solid #ddd; color: #2d8a2d; font-weight: bold;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الباركود</td><td id="barcode"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الباركود</td>
-            <td id="barcode" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الشركة</td><td id="company"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الشركة</td>
-            <td id="company" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">العدد</td><td id="unite"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">العدد</td>
-            <td id="unite" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">سعر الواحدة</td><td id="unitePrice"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">سعر الواحدة</td>
-            <td id="unitePrice" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">طريقة الاستخدام</td><td id="route"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">طريقة الاستخدام</td>
-            <td id="route" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">طريقة الاستخدام بالعربي</td><td id="routeArabic" style="color: #d84315; font-weight: bold;"></td>
         </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">طريقة الاستخدام بالعربي</td>
-            <td id="routeArabic" style="padding: 10px; border: 1px solid #ddd; color: #d84315; font-weight: bold;"></td>
-        </tr>
-        <tr>
-            <td style="padding: 10px; border: 1px solid #ddd; background-color: #f9faff; font-weight: 600; color: #5757b1;">الوصف العلمي</td>
-            <td id="details" style="padding: 10px; border: 1px solid #ddd;"></td>
+        <tr><td style="padding: 10px; background-color: #f9faff; font-weight: 600;">الوصف العلمي</td><td id="details"></td>
         </tr>
     </tbody>
 </table>
-      			<div id="resultDivPage" style="position:absolute;margin:3px auto;width:100%;z-index:99;background:#fff;max-height:70vh;overflow:scroll;overflow-x: hidden;"></div>
 
-			 </div>
-				<!-- From Uiverse.io by mobinkakei --> 
-<button id="btn_print" onclick="printDiv()" class="btn-print">
-  <i class="fa fa-print"></i> طباعة دفتر النواقص
+<button id="btn_print" onclick="printDiv()" class="btn-print" style="margin:10px 0; padding:10px 20px; background:#5757b1; color:white; border:none; border-radius:8px;">
+    <i class="fa fa-print"></i> طباعة دفتر النواقص
 </button>
 
-<div id="confirmModal" class="confirm-overlay">
-  <div class="confirm-box">
-    <div class="confirm-title">⚠️ تأكيد الحذف</div>
-    <div class="confirm-text">
-      هل أنت متأكد من حذف الصنف؟
-      <br>
-      <small>الحذف نهائي ولا يمكن التراجع</small>
-    </div>
-    <div class="confirm-actions">
-      <button id="confirmYes" class="btn-confirm">حذف</button>
-      <button id="confirmNo" class="btn-cancel">إلغاء</button>
-    </div>
-  </div>
+<div id="printTable">
+    <table id="dafte" style="font-weight:bold;font-size:12px;width:100%;text-transform:uppercase; border-collapse:collapse;">
+        <thead style="text-align:center;background:#123;color:#FFF">
+            <tr>
+                <th style="padding:8px;">ID</th>
+                <th id="sortName" style="padding:8px;">اسم الصنف</th>
+                <th id="sortArabic" style="padding:8px;">اسم الصنف بالعربي</th>
+                <th style="padding:8px;">سعر</th>
+                <th style="display:none;">Form</th>
+                <th style="padding:8px;">كمية</th>
+                <th style="display:none;">التاريخ</th>
+                <th style="padding:8px;">ملاحظات</th>
+                <th class="no-print" style="padding:8px;">حذف</th>
+            </tr>
+        </thead>
+        <tbody style="text-align:center;line-height:1;font-size:14px" id="tbody"></tbody>
+    </table>
 </div>
-<div id="toast" class="toast"></div>
+
+<!-- Modal for confirm delete -->
+<div id="confirmModal" class="confirm-overlay" style="display:none;">
+    <div class="confirm-box">
+        <div class="confirm-title">⚠️ تأكيد الحذف</div>
+        <div class="confirm-text"></div>
+        <div class="confirm-actions" style="margin-top:15px;">
+            <button id="confirmYes" class="btn-confirm" style="background:#d32f2f; color:white; padding:8px 15px; border:none; border-radius:5px;">حذف</button>
+            <button id="confirmNo" class="btn-cancel" style="background:#757575; color:white; padding:8px 15px; border:none; border-radius:5px;">إلغاء</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for note/quantity -->
 <div id="modalOverlay" class="modal-overlay" style="display:none">
-  <div class="modal-box">
-    <h3 id="modalTitle"></h3>
-    <input id="modalInput" type="text" />
-    <div class="modal-actions">
-      <button onclick="closeModal()">إلغاء</button>
-      <button class="ok" onclick="confirmModal()">حفظ</button>
+    <div class="modal-box">
+        <h3 id="modalTitle"></h3>
+        <input id="modalInput" type="text" />
+        <div class="modal-actions">
+            <button onclick="closeModal()">إلغاء</button>
+            <button class="ok" onclick="confirmModal()">حفظ</button>
+        </div>
     </div>
-  </div>
 </div>
 
-				
-				<div id="printTable">
-				<table id="dafte" style="font-weight:bold;font-size:12px;width:100%;text-transform:uppercase" class="tableDa" >
-					<thead style="text-align:center;background:#123;color:#FFF">
-						<tr>
-							<th>ID</th>
-                            <th id="sortName">اسم الصنف</th>
-							<th id="sortArabic">اسم الصنف</th>
-							<th>سعر</th>
-							<th style="display:none;">Form</th>
-							<th>كمية</th>
-							<th style="display:none;">التاريخ</th>
-							<th>ملاحظات</th>
-							<th class="no-print">حذف</th>
-
-							
-						</tr>
-						
-                    </thead>
-
-				<tbody style="text-align:center;line-height:1;font-size:14px" id="tbody">
-				
-					
-				</tbody>
-				</table>
-	
-				</div>
-				<!-- Add Manual Item Modal -->
+<!-- Add Manual Item Modal -->
 <div id="addManualModal" class="confirm-overlay" style="display:none;">
-  <div class="confirm-box">
-
-    <h4 style="margin-bottom:10px;">➕ إضافة صنف يدوي</h4>
-
-    <input id="m_name" placeholder="اسم الصنف (English)" class="confirm-input">
-    <input id="m_arabic" placeholder="الاسم بالعربي" class="confirm-input">
-    <input id="m_price" placeholder="السعر" type="number" class="confirm-input">
-
-    <div class="confirm-actions">
-      <button class="btn-cancel" onclick="closeManual()">إلغاء</button>
-      <button class="btn-ok" onclick="saveManual()">إضافة</button>
+    <div class="confirm-box">
+        <h4 style="margin-bottom:10px;">➕ إضافة صنف يدوي</h4>
+        <input id="m_name" placeholder="اسم الصنف (English)" class="confirm-input">
+        <input id="m_arabic" placeholder="الاسم بالعربي" class="confirm-input">
+        <input id="m_price" placeholder="السعر" type="number" class="confirm-input">
+        <div class="confirm-actions" style="margin-top:15px;">
+            <button class="btn-cancel" onclick="closeManual()">إلغاء</button>
+            <button class="btn-ok" onclick="saveManual()">إضافة</button>
+        </div>
     </div>
-
-  </div>
 </div>
 
-	<iframe name="print_fream" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+<iframe name="print_fream" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 <div id="externalScriptNew" style="margin:100px auto"></div>
 </div>
 
-
-
-
-   
-
+<div id="toast" class="toast"></div>
 
 <script src="include.js"></script>
 <script src="allDrugz.js"></script>
 <script src="indications.js"></script>
 <script src="interactionsDB.js"></script>
-<script src="imageDrug.js"></script>
 <script src="showData.js"></script>
 <script src="theme-manager.js"></script>
-	<script>
-    // تفعيل Service Worker للـ PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('SW Registered'))
-            .catch(err => console.log('SW Failed', err));
-        });
-    }
 
-    // إدارة القوائم المنسدلة
-    $(document).on('click', '#searchMode', function(e) {
-        $('#divSlidyInp').slideToggle(200);
-        e.stopPropagation();
-    });
-
-    $(document).on('click', function() {
-        $('#divSlidyInp').slideUp(200);
-    });
-
-    // التحكم في ظهور العناصر عند البحث (لتحسين تجربة الآيفون)
-    $('#inpSearch').on('input', function() {
-        if ($(this).val().length > 0) {
-            $('#defatArea').addClass('hidden-on-search');
-            $('#midAd').show();
-        } else {
-            $('#defatArea').removeClass('hidden-on-search');
-            $('#midAd').hide();
-            $('#resultDiv').html("");
-            $('#tableInfo').hide();
-        }
-    });
-
-    // زر الحذف (X)
-    $('#XDelt').click(function() {
-        $('#inpSearch').val("").trigger('input');
-    });
-
-    function setSearchMode(mode) {
-        let label = "الأسم التجاري";
-        if(mode === 'active') label = "المادة الفعالة";
-        if(mode === 'pharma') label = "الفارماكولوجي";
-        $('#searchMode').val(label);
-    }
-</script>
 <script type="text/javascript">
 
-$(document).ready(function() {
+// ===================== UTILITY FUNCTIONS =====================
+function cleanForJS(str) {
+    if (!str) return "";
+    return str.toString()
+        .replace(/\\/g, "\\\\")
+        .replace(/'/g, "\\'")
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, " ")
+        .replace(/\r/g, " ");
+}
 
-    document.addEventListener("deviceready", onDeviceReady, false);
-    function onDeviceReady() {
-        // Device is ready
+function formatToCapital(str) {
+    if (!str) return "";
+    return str.toLowerCase().split(' ').map(word => {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+    }).join(' ');
+}
+
+function formatDate(timestamp) {
+    if (!timestamp) return "غير متاح";
+    const date = new Date(parseInt(timestamp));
+    if (isNaN(date.getTime())) return "غير متاح";
+    return date.toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+}
+
+// ===================== دالة الحصول على الصورة حسب الـ route (الأدق) =====================
+function getImageByRoute(route, dosageForm) {
+    if (!route && !dosageForm) return "img/logo.png";
+    
+    const r = (route || "").toLowerCase();
+    const f = (dosageForm || "").toLowerCase();
+    
+    // 1. قطرة العين
+    if (r.includes('eye') || r.includes('ophthalmic') || f.includes('eye')) {
+        return "img/dropeye.png";
+    }
+    
+    // 2. قطرة الأذن
+    if (r.includes('ear') || r.includes('otic')) {
+        return "img/ear.png";
+    }
+    
+    // 3. قطرة (عامة)
+    if (r.includes('drop') || f.includes('drop')) {
+        if (r.includes('nasal') || r.includes('nose')) {
+            return "img/nasal.png";
+        }
+        if (r.includes('mouth') || r.includes('oral')) {
+            return "img/mouth.png";
+        }
+        return "img/drop.png";
+    }
+    
+    // 4. الحقن
+    if (r.includes('injection') || r.includes('inj') || f.includes('inject') || f.includes('vial') || f.includes('amp')) {
+        return "img/injection.png";
+    }
+    
+    // 5. المحاليل الوريدية
+    if (r.includes('infusion') || r.includes('iv') || r.includes('intravenous')) {
+        return "img/infusion.png";
+    }
+    
+    // 6. الاستنشاق (بخاخات الربو)
+    if (r.includes('inhal') || r.includes('inhaler') || r.includes('respiratory')) {
+        return "img/inhalation.png";
+    }
+    
+    // 7. الأنف (بخاخ)
+    if (r.includes('nasal') || r.includes('nose')) {
+        return "img/nasal.png";
+    }
+    
+    // 8. الفم (غرغرة، مضمضة)
+    if (r.includes('mouth') || r.includes('gargle') || r.includes('mouthwash')) {
+        return "img/mouth.png";
+    }
+    
+    // 9. الأقراص والكبسولات (الصلبة)
+    if (r.includes('oral.solid') || f.includes('tablet') || f.includes('cap') || f.includes('pill')) {
+        // أقراص فوارة
+        if (f.includes('eff') || r.includes('effervescent')) {
+            return "img/eff.png";
+        }
+        return "img/oralsolid.png";
+    }
+    
+    // 10. السوائل الفموية (شراب، معلق)
+    if (r.includes('oral.liquid') || f.includes('syrup') || f.includes('suspension') || f.includes('solution')) {
+        return "img/oralliquid.png";
+    }
+    
+    // 11. الكريمات والدهانات (موضعي)
+    if (r.includes('topical') || f.includes('cream') || f.includes('gel') || f.includes('ointment') || f.includes('lotion')) {
+        return "img/medical.png";
+    }
+    
+    // 12. اللبوس (تحاميل)
+    if (r.includes('rectal') || f.includes('suppository') || f.includes('supp')) {
+        return "img/rectal.png";
+    }
+    
+    // 13. البودرة
+    if (f.includes('powder') || r.includes('powder')) {
+        return "img/powder.png";
+    }
+    
+    // 14. الأكياس
+    if (f.includes('sachet') || r.includes('sachet')) {
+        return "img/sachests.png";
+    }
+    
+    // الصورة الافتراضية
+    return "img/logo.png";
+}
+
+// ===================== دالة الحصول على الصورة حسب الشكل الدوائي (احتياطي) =====================
+function getDosageIcon(form) {
+    const f = form ? form.toLowerCase() : "";
+    
+    // أقراص وكبسولات
+    if (f.includes('tablet') || f.includes('cap') || f.includes('pill')) {
+        return "img/oralsolid.png";
+    }
+    
+    // شراب ومعلق
+    if (f.includes('syrup') || f.includes('susp') || f.includes('solution')) {
+        return "img/oralliquid.png";
+    }
+    
+    // حقن وأمبولات
+    if (f.includes('inject') || f.includes('amp') || f.includes('vial')) {
+        return "img/injection.png";
+    }
+    
+    // كريم وجل ومرهم
+    if (f.includes('cream') || f.includes('gel') || f.includes('ointment')) {
+        return "img/medical.png";
+    }
+    
+    // نقط
+    if (f.includes('drop')) {
+        return "img/drop.png";
+    }
+    
+    // لبوس
+    if (f.includes('supp') || f.includes('suppository')) {
+        return "img/rectal.png";
+    }
+    
+    // أكياس
+    if (f.includes('sachet')) {
+        return "img/sachests.png";
+    }
+    
+    // بودرة
+    if (f.includes('powder')) {
+        return "img/powder.png";
+    }
+    
+    // الشعار الافتراضي
+    return "img/logo.png";
+}
+
+// ===================== الدالة الرئيسية (تجمع بين الاتنين) =====================
+function getDrugImage(route, dosageForm) {
+    // أولاً: حاول تجيب صورة حسب route (أدق وأجمل)
+    let imageUrl = getImageByRoute(route, dosageForm);
+    
+    // ثانياً: إذا رجعت الصورة الافتراضية، جرب حسب dosage_form
+    if (imageUrl === "img/logo.png") {
+        imageUrl = getDosageIcon(dosageForm);
+    }
+    
+    return imageUrl;
+}
+
+// ===================== مثال للاستخدام في handelData =====================
+// في دالة handelData استخدم:
+// var imageUrl = getDrugImage(route, dosageForm);
+
+// ===================== مثال للاستخدام في details.html =====================
+// في صفحة التفاصيل استخدم:
+// var drugImage = getDrugImage(drug.route, drug.dosage_form);
+// document.getElementById('drug-icon').innerHTML = `<img src="${drugImage}" style="width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid white;">`;
+// ===================== SEARCH MODE =====================
+window.setSearchMode = function(mode) {
+    const modeInput = $('#searchMode');
+    if (mode === 'name') modeInput.val("الأسم التجاري");
+    else if (mode === 'active') modeInput.val("المادة الفعالة");
+    else if (mode === 'pharma') modeInput.val("الفارماكولوجي");
+    $('#divSlidyInp').hide();
+    $('#inpSearch').trigger('keyup');
+};
+
+// ===================== GO TO DETAILS PAGE =====================
+window.goToDetails = function(drugName) {
+    window.location.href = 'details.html?n=' + encodeURIComponent(drugName);
+};
+
+// ===================== REDRAW LIST FUNCTION =====================
+function redrawList() {
+    $('#resultDiv .drugCard').remove();
+    if (window.currentList && window.currentList.length > 0) {
+        window.currentList.forEach((drug, i) => {
+            if (typeof window.handelData === 'function') {
+                window.handelData(drug, i);
+            }
+        });
+    } else if (window.currentList && window.currentList.length === 0) {
+        $('#resultDiv').html("<div class='alertResulte'>❌ لا توجد نتائج</div>");
+    }
+}
+
+// ===================== HANDEL DATA =====================
+window.handelData = function(drug, i) {
+    var {
+        name, arabic, active, price, oldprice = "N/A", units: unite,
+        dosage_form: dosageForm = "default", description,
+        Date_updated
+    } = drug;
+
+    const fName = formatToCapital(name);
+    const fActive = formatToCapital(active);
+    const fDesc = formatToCapital(description || 'غير مصنف');
+    const safeName = cleanForJS(name);
+    const safeActive = cleanForJS(active);
+    const safeDescription = cleanForJS(description);
+    const safeArabic = cleanForJS(arabic);
+    const safePrice = price || 0;
+    const safeDosageForm = cleanForJS(dosageForm);
+
+    var unitePrice = (price / unite).toFixed(1);
+    var dosageIconUrl = getDosageIcon(dosageForm);
+    var lastUpdated = Date_updated ? formatDate(Date_updated) : "غير متاح";
+
+    // دواعي الاستعمال
+    let indicationText = "لم يتم تحديد دواعي الاستعمال";
+    let safetyHTML = "";
+
+    if (typeof indicationsDB !== 'undefined' && active) {
+        const cleanActive = active.toLowerCase().trim();
+        let entry = indicationsDB[cleanActive];
+        if (!entry && cleanActive.includes('+')) entry = indicationsDB[cleanActive.split('+')[0].trim()];
+        if (!entry && cleanActive.includes('/')) entry = indicationsDB[cleanActive.split('/')[0].trim()];
+        
+        if (entry) {
+            if (typeof entry === 'string') indicationText = entry;
+            else if (entry.usage) indicationText = entry.usage[dosageForm?.toLowerCase()] || entry.usage.default || "دواعي استعمال عامة";
+            else indicationText = entry[dosageForm?.toLowerCase()] || entry.default || "دواعي استعمال عامة";
+        }
     }
 
-    $(document).on('click', '#searchMode', function(event){
-        $('.divSlidyInp').slideDown();
-        event.stopPropagation();
-    });
+    // التحقق من وجود الدواء في دفتر النواقص
+    let added = false;
+    try {
+        if (typeof isItemAdded === 'function') {
+            added = isItemAdded(name, arabic);
+        }
+    } catch(e) { console.warn("isItemAdded not available"); }
+    
+    let btnClass = added ? 'add-btn added' : 'add-btn';
+    let btnIcon = added ? 'fa-check' : 'fa-plus';
+    let disabled = added ? 'disabled' : '';
 
-    $(document).on('click', '.spanSlidy', function(){
-        searchMode.value = $(this).html();
-        $('.divSlidyInp').slideUp();
-        console.log("Search Mode Selected:", searchMode.value);
-    });
+    // دالة فتح صور جوجل
+    function openGoogleImages(drugName) {
+        const searchQuery = encodeURIComponent(`${drugName} دواء`);
+        window.open(`https://www.google.com/search?q=${searchQuery}&tbm=isch`, '_blank');
+    }
 
-    $(document).on('click','#XDelt', function(){
-        $('#tableInfo').hide();
-        $('#btn_print').show();
-        $('#dafte').show();
-        $('#inpSearch').val("");
-        $('#resultDiv').html("");
-		$('#box_price').hide();
-    });
+    $('#resultDiv').append(`
+        <div class="drugCard" style="display: flex; flex-direction: column; padding: 12px; border-bottom: 1px solid #eee; background:#fff; border-radius:12px; margin:8px 10px; box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <div style="display: flex; align-items: center; gap:12px; cursor:pointer;" onclick="goToDetails('${safeName}')">
+                <div style="width: 55px; height: 55px; flex-shrink: 0; background: #f5f5f5; border-radius: 10px; display:flex; align-items:center; justify-content:center;">
+                    <img src="${dosageIconUrl}" onerror="this.src='img/logo.png';" style="width: 40px; height: 40px; object-fit: contain;">
+                </div>
+                <div style="flex-grow: 1; text-align: left;">
+                    <div style="font-size: 16px; font-weight: bold; color: #333;">${fName}</div>
+                    <div style="font-size: 12px; color: #666;">${arabic || ''}</div>
+                    <div style="font-size: 12px; color: #5757b1;">🧪 ${fActive}</div>
+                    <div style="font-size: 11px; color: green;">📂 ${fDesc.substring(0, 40)}${fDesc.length > 40 ? '...' : ''}</div>
+                </div>
+                <div style="text-align: center; background: #fff3f3; padding: 8px 12px; border-radius: 10px; border: 1px solid #ff4d4d; min-width: 80px;">
+                    <span style="font-size:10px; color:purple;">${lastUpdated}</span><br>
+                    <b style="color:#d60000; font-size: 16px;">${parseFloat(price).toFixed(2)}</b><br>
+                    <span style="font-size: 9px; color:gray"><del>${oldprice} L.E</del></span>
+                </div>
+            </div>
 
-    $(document).on('click','.upperDiv', function(){
-        $('#inpSearch').val("");
-        $('#resultDiv').html("");
-    });
+            <div style="margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap;">
+                <button onclick="event.stopPropagation(); getSimilar('${safeActive}')" class="btn btn-sm btn-outline-success" style="flex:1; font-size:12px;">🔄 Similar</button>
+                <button onclick="event.stopPropagation(); getAlt('${safeDescription}', '${safeActive}')" class="btn btn-sm btn-outline-primary" style="flex:1; font-size:12px;">💊 alternatives</button>
+                <button onclick="event.stopPropagation(); window.open('https://www.google.com/search?q=' + encodeURIComponent('${safeName} دواء') + '&tbm=isch', '_blank')" class="btn btn-sm btn-outline-danger" style="flex:1; font-size:12px;">🖼️ images</button>
+                <button class="${btnClass}" ${disabled} onclick="event.stopPropagation(); addItemsList(this,'${safeName}','${safeArabic}','${safePrice}','${safeDosageForm}')" style="flex:0.5;"><i class="fa ${btnIcon}"></i></button>
+            </div>
 
-    $(document).on('click', function () {
-        $('.divSlidyInp').slideUp();
+            <div id="alternatives-${i}" class="alt-container" style="display:none; margin-top:10px; border-top:1px dashed #ccc; padding-top:10px; max-height:200px; overflow-y:auto;">
+            </div>
+        </div>
+    `);
+};
+
+// ===================== SIMILAR (نفس المادة الفعالة) =====================
+window.getSimilar = function(active) {
+    $('#resultDiv').html("");
+    $('#inpSearch').val("");
+    
+    window.fullList = [];
+    window.currentList = [];
+    window.currentFilterForm = "all";
+    window.currentCompany = "all";
+    
+    if (!active) {
+        $('#resultDiv').html("<div class='alertResulte' style='text-align:center; padding:20px;'>❌ لا توجد مواد فعالة للبحث</div>");
+        return;
+    }
+    
+    const targetActive = active.trim().toLowerCase();
+    
+    allDrugz.forEach(drug => {
+        if (drug.active && drug.active.trim().toLowerCase() === targetActive) {
+            window.fullList.push(drug);
+        }
     });
+    
+    if (window.fullList.length === 0) {
+        $('#resultDiv').html("<div class='alertResulte' style='text-align:center; padding:20px;'>🔍 لا توجد أدوية بنفس المادة الفعالة</div>");
+        return;
+    }
+    
+    window.fullList = window.fullList.slice(0, 150);
+    window.currentList = [...window.fullList];
+    
+    redrawList();
+    
+    $('#resultDiv').scrollTop(0);
+    showToastMessage(`✅ تم العثور على ${window.fullList.length} دواء بنفس المادة الفعالة`, "success");
+};
+
+// ===================== ALTERNATIVE (نفس الفارماكولوجي) =====================
+window.getAlt = function(description, active) {
+    $('#resultDiv').html("");
+    $('#inpSearch').val("");
+    
+    window.fullList = [];
+    window.currentList = [];
+    window.currentFilterForm = "all";
+    window.currentCompany = "all";
+    
+    if (!description) {
+        $('#resultDiv').html("<div class='alertResulte' style='text-align:center; padding:20px;'>❌ لا يوجد وصف دوائي للبحث</div>");
+        return;
+    }
+    
+    const targetDesc = description.trim().toLowerCase();
+    const currentActive = active ? active.trim().toLowerCase() : "";
+    
+    allDrugz.forEach(drug => {
+        if (drug.description && 
+            drug.description.trim().toLowerCase() === targetDesc &&
+            drug.active !== currentActive) {
+            window.fullList.push(drug);
+        }
+    });
+    
+    if (window.fullList.length === 0) {
+        $('#resultDiv').html("<div class='alertResulte' style='text-align:center; padding:20px;'>🔍 لا توجد بدائل لنفس التصنيف الدوائي</div>");
+        return;
+    }
+    
+    window.fullList = window.fullList.slice(0, 150);
+    window.currentList = [...window.fullList];
+    
+    redrawList();
+    
+    $('#resultDiv').scrollTop(0);
+    showToastMessage(`✅ تم العثور على ${window.fullList.length} بديل`, "success");
+};
+
+// ===================== PRINT FUNCTION =====================
+window.printDiv = function() {
+    const printContent = document.getElementById('printTable').innerHTML;
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`
+        <html>
+        <head><title>دفتر النواقص</title>
+        <style>
+            body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+            table { width: 100%; border-collapse: collapse; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+            th { background: #123; color: white; }
+        </style>
+        </head>
+        <body>${printContent}</body>
+        </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
+};
+
+// ===================== TOAST FUNCTION =====================
+function showToastMessage(msg, type = "success") {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => { toast.className = "toast"; }, 2500);
+}
+
+// ===================== CALCULATOR =====================
+document.getElementById("inpSearch").addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        const inputField = this;
+        if (/[0-9+\-*/(). ]/.test(inputField.value)) {
+            try {
+                const result = Function('"use strict";return (' + inputField.value + ')')();
+                if (typeof result === 'number' && isFinite(result)) {
+                    inputField.value = result;
+                    inputField.classList.remove("input-error");
+                } else throw new Error();
+            } catch (e) { 
+                inputField.classList.add("input-error");
+                setTimeout(() => { inputField.classList.remove("input-error"); }, 1000);
+            }
+        }
+    }
+});
+
+// ===================== SEARCH HANDLER =====================
 $(document).on('keyup input', '#inpSearch, #minPrice, #maxPrice, #priceTypeSwitch', function() {
     $('#resultDiv').html("");
-	
-    // التمرير لأعلى منطقة البحث عند البدء في الكتابة
-    if (this.id === 'inpSearch' && $(this).val().length > 0) {
-        window.scrollTo({ top: $(this).offset().top - 10, behavior: 'smooth' });
-    }
-
+    
     const searchText = $('#inpSearch').val().trim();
     const minP = parseFloat($('#minPrice').val()) || 0;
     const maxP = parseFloat($('#maxPrice').val()) || Infinity;
     const isOldPrice = $('#priceTypeSwitch').is(':checked');
-
-    // تحقق: هل مربع السعر مفتوح حالياً؟
     const isPriceFilterActive = $('#box_price').is(':visible');
+    const searchModeValue = $('#searchMode').val();
 
     if (searchText.length < 1 && minP === 0 && maxP === Infinity) {
         $('#resultDiv').html("");
@@ -502,1264 +1042,139 @@ $(document).on('keyup input', '#inpSearch, #minPrice, #maxPrice, #priceTypeSwitc
         $('#tableInfo').hide();
     }
 
-    if (searchMode.value === "Advanced Search") {
-        if (searchText.length < 3) {
-            $('#resultDiv').html("");
-            return;
-        }
-    }
-
-    const [namePart, activePart] = searchText.split("=").map(part => part.trim());
-
-    // --- أولاً: البحث بالتاريخ (مع تنظيف النص) ---
-    const cleanDateText = searchText.replace(/\*/g, '').replace(/\s+/g, '').trim();
-    const fullDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
-    const monthYearRegex = /^\d{1,2}\/\d{4}$/;
-
-    if (fullDateRegex.test(cleanDateText) || monthYearRegex.test(cleanDateText)) {
-        const dateParts = cleanDateText.split('/');
-        const day = dateParts.length === 3 ? parseInt(dateParts[0]) : null;
-        const month = parseInt(dateParts[dateParts.length === 3 ? 1 : 0]);
-        const year = parseInt(dateParts[dateParts.length - 1]);
-
-        const filteredList = allDrugz.filter(drug => {
-            if (!drug.Date_updated) return false;
-            const drugDate = new Date(parseInt(drug.Date_updated));
-            const matchesYear = drugDate.getFullYear() === year;
-            const matchesMonth = (drugDate.getMonth() + 1) === month;
-            const matchesDay = day ? drugDate.getDate() === day : true;
-
-            // تطبيق فلتر السعر فقط إذا كان المربع مفتوحاً
-            let matchesPrice = true;
-            if (isPriceFilterActive) {
-                const p = isOldPrice ? (parseFloat(drug.oldprice) || 0) : (parseFloat(drug.price) || 0);
-                matchesPrice = (p >= minP && p <= maxP);
-            }
-
-            return matchesYear && matchesMonth && matchesDay && matchesPrice;
-        })
-        .sort((a, b) => b.Date_updated - a.Date_updated)
-        .slice(0, 500);
-
-        displayProcessedResults(filteredList);
-        return;
-    }
-
-    // --- ثانياً: البحث زي الأندرويد بالضبط ---
-    
-    // بناء pattern زي الأندرويد: query.replace("*", ".*").replace(/\s+/, ".*")
     const pattern = searchText.replace(/\*/g, ".*").replace(/\s+/g, ".*");
-    
-    // Regex للبحث من بداية النص (زي الأندرويد بالظبط)
     const regexFromStart = new RegExp("^" + pattern, 'i');
-    
-    // Regex للبحث في أي مكان (للمادة الفعالة والفارما)
     const regexAnywhere = new RegExp(pattern, 'i');
     
-    let finalFilteredList = [];
+    let results = [];
 
-    if (searchMode.value === "Advanced Search" || searchMode.value === "Name-Active") {
-        // Advanced Search: بحث متقدم
-        const namePattern = "^" + processText(namePart || "").replace(/\*/g, ".*").replace(/\s+/g, ".*");
-        const activePattern = "^" + processText(activePart || "").replace(/\*/g, ".*").replace(/\s+/g, ".*");
-        const nameRegex = new RegExp(namePattern, 'i');
-        const activeRegex = new RegExp(activePattern, 'i');
-
-        finalFilteredList = allDrugz.filter(drug => {
-            const drugNameProcessed = processText(drug.name || "");
-            const drugActiveProcessed = processText(drug.active || "");
-            const matchesName = namePart ? nameRegex.test(drugNameProcessed) : true;
-            const matchesActive = activePart ? activeRegex.test(drugActiveProcessed) : true;
-            
-            // فلتر السعر فقط إذا كان المربع مفتوحاً
-            let matchesPrice = true;
-            if (isPriceFilterActive) {
-                const p = isOldPrice ? (parseFloat(drug.oldprice) || 0) : (parseFloat(drug.price) || 0);
-                matchesPrice = (p >= minP && p <= maxP);
-            }
-            return matchesName && matchesActive && matchesPrice;
-        });
-    } 
-    else {
-        finalFilteredList = allDrugz.filter(drug => {
-            let matchesText = false;
-
-            if (searchMode.value === "المادة الفعالة") {
-                // المادة الفعالة: بحث في أي مكان
-                matchesText = regexAnywhere.test(drug.active || "");
-            } 
-            else if (searchMode.value === "الفارماكولوجي") {
-                // الفارماكولوجي: بحث في أي مكان
-                matchesText = regexAnywhere.test(drug.description || "");
-            } 
-            else {
-                // الاسم التجاري: بحث من بداية الكلمة (زي الأندرويد بالظبط)
-                // بنجرب في الاسم الإنجليزي والعربي
-                const nameMatch = regexFromStart.test(drug.name || "");
-                const arabicMatch = regexFromStart.test(drug.arabic || "");
-                matchesText = nameMatch || arabicMatch;
-            }
-
-            // فلتر السعر
-            let matchesPrice = true;
-            if (isPriceFilterActive) {
-                const p = isOldPrice ? (parseFloat(drug.oldprice) || 0) : (parseFloat(drug.price) || 0);
-                matchesPrice = (p >= minP && p <= maxP);
-            }
-            return matchesText && matchesPrice;
-        });
+    if (searchModeValue === "المادة الفعالة") {
+        results = allDrugz.filter(drug => regexAnywhere.test(drug.active || ""));
+    } else if (searchModeValue === "الفارماكولوجي") {
+        results = allDrugz.filter(drug => regexAnywhere.test(drug.description || ""));
+    } else {
+        results = allDrugz.filter(drug => 
+            regexFromStart.test(drug.name || "") || regexFromStart.test(drug.arabic || "")
+        );
     }
 
-    // الترتيب حسب السعر
     if (isPriceFilterActive) {
-        finalFilteredList.sort((a, b) => {
-            const pA = isOldPrice ? (parseFloat(a.oldprice) || 0) : (parseFloat(a.price) || 0);
-            const pB = isOldPrice ? (parseFloat(b.oldprice) || 0) : (parseFloat(b.price) || 0);
-            return pA - pB;
+        results = results.filter(drug => {
+            const p = isOldPrice ? (parseFloat(drug.oldprice) || 0) : (parseFloat(drug.price) || 0);
+            return p >= minP && p <= maxP;
         });
     }
 
-    // إرسال النص لعمل الـ Highlight
-    displayProcessedResults(finalFilteredList.slice(0, 100), searchText);
-});
-function highlightText(text, term) {
-    if (!term || !text) return text;
-    // تنظيف النجوم من نص البحث لكي لا يكسر الريجكس
-    const cleanTerm = term.replace(/\*/g, "").trim();
-    if (!cleanTerm) return text;
+    results.sort((a, b) => (parseInt(b.Date_updated) || 0) - (parseInt(a.Date_updated) || 0));
+    results = results.slice(0, 100);
 
-    const regex = new RegExp(`(${cleanTerm})`, 'gi');
-    return text.toString().replace(regex, '<mark style="background: #ffeb3b; padding: 0 2px; border-radius: 2px;">$1</mark>');
-}
-
-// دالة العرض المحدثة
-function displayProcessedResults(list, searchTerm) {
-    if (list.length === 0) {
-        $('#resultDiv').html("<div style='text-align:center; padding:20px;'>No results found</div>");
+    if (results.length === 0) {
+        $('#resultDiv').html("<div style='text-align:center; padding:30px; color:#999;'>❌ لا توجد نتائج مطابقة للبحث</div>");
     } else {
-        list.forEach((drug, i) => {
-            // عمل نسخة من البيانات لتجنب تعديل الأصل
-            let displayedDrug = { ...drug };
-            
-            // تطبيق التلوين على الاسم والمادة والوصف
-            displayedDrug.name = highlightText(displayedDrug.name, searchTerm);
-            displayedDrug.arabic = highlightText(displayedDrug.arabic, searchTerm);
-            displayedDrug.active = highlightText(displayedDrug.active, searchTerm);
-            if(displayedDrug.description) {
-                displayedDrug.description = highlightText(displayedDrug.description, searchTerm);
-            }
-
-            handelData(displayedDrug, i);
-        });
+        results.forEach((drug, i) => window.handelData(drug, i));
     }
-}
-
-// دالة مساعدة لعرض النتائج لتقليل تكرار الكود
-function displayProcessedResults(list) {
-    if (list.length === 0) {
-        $('#resultDiv').html("<div style='text-align:center; padding:20px;'>No results found</div>");
-    } else {
-        list.forEach((drug, i) => {
-            handelData(drug, i);
-        });
-    }
-}
-
-// كود تشغيل زر فتح وإغلاق مربع السعر
-// كود تشغيل زر السعر مع مسح الفلترة عند الإغلاق
-$(document).on('click', '#btnTogglePrice', function() {
-    const box = $('#box_price');
-    
-    box.slideToggle(300, function() {
-        // إذا أصبح المربع مخفياً بعد الضغط
-        if (box.is(':hidden')) {
-            // 1. تصفير قيم المدخلات
-            $('#minPrice').val("");
-            $('#maxPrice').val("");
-            $('#priceTypeSwitch').prop('checked', false);
-            
-            // 2. إطلاق حدث البحث لتحديث النتائج فوراً بدون فلاتر السعر
-            $('#inpSearch').trigger('keyup');
-        }
-    });
 });
 
-
-// دالة لاستبدال الحروف العربية بحروف إنجليزية
-function replaceArabicLetters(text) {
-    return text
-        .replace(/ب/g, "P")
-        .replace(/ت/g, "T")
-        .replace(/ث/g, "S")
-        .replace(/ج/g, "G")
-        .replace(/د/g, "D")
-        .replace(/ذ/g, "Z")
-        .replace(/ر/g, "R")
-        .replace(/ز/g, "Z")
-        .replace(/س/g, "S")
-        .replace(/ش/g, "S")
-        .replace(/ص/g, "S")
-        .replace(/ض/g, "D")
-        .replace(/ط/g, "T")
-        .replace(/ظ/g, "Z")
-        .replace(/ف/g, "F")
-        .replace(/ق/g, "C")
-        .replace(/ك/g, "K")
-        .replace(/ل/g, "L")
-        .replace(/م/g, "M")
-        .replace(/ن/g, "N")
-        .replace(/ه/g, "H")
-		.replace(/ا/g, "")
-        .replace(/و/g, "")
-        .replace(/ؤ/g, "")
-        .replace(/ي/g, "")
-        .replace(/ى/g, "")
-		.replace(/ئ/g, "")
-		.replace(/ء/g, "")
-		.replace(/أ/g, "")
-		.replace(/ع/g, "")
-        .replace(/غ/g, "")
-        .replace(/ح/g, "")
-        .replace(/خ/g, "")
-		.replace(/\s+/g, "")
-		.replace(/-/g, "")
-}
-
-// دالة استبدال الحروف الإنجليزية بعد تحويل النص من العربي
-function processText(drugName) {
-    return replaceArabicLetters(drugName.toUpperCase())
-        .replace(/Z/g, "S")
-        .replace(/CH/g, "K")
-        .replace(/SH/g, "K")
-        .replace(/PH/g, "F")
-        .replace(/CCI/g, "XI")
-        .replace(/CCY/g, "XI")
-        .replace(/CCE/g, "XI")
-        .replace(/CI/g, "SE")
-        .replace(/CE/g, "SE")
-        .replace(/CY/g, "SE")
-        .replace(/C/g, "K")
-        .replace(/SS/g, "S")
-        .replace(/SZ/g, "S")
-        .replace(/CC/g, "K")
-        .replace(/CK/g, "K")
-        .replace(/P/g, "B")
-        .replace(/Q/g, "K")
-        .replace(/KS/g, "X")
-        .replace(/RH/g, "R")
-        .replace(/V/g, "F")
-        .replace(/TH/g, "S")
-        .replace(/MM/g, "M")
-        .replace(/LL/g, "L")
-        .replace(/NN/g, "N")
-        .replace(/J/g, "G")
-        .replace(/GG/g, "G")
-		.replace(/\s+/g, "")
-		.replace(/-/g, "")
-        .replace(/E/g, "")
-        .replace(/A/g, "")
-        .replace(/I/g, "")
-        .replace(/Y/g, "")
-        .replace(/U/g, "")
-        .replace(/O/g, "")
-}
-
-function getImageByName(drugName) {
-    let foundImage = imageDrug.find(img => img.name === drugName);
-    if (foundImage && foundImage.img) {
-        return "images/" + foundImage.img;
-    }
-
-}
-
-function formatDate(timestamp) {
-    const date = new Date(parseInt(timestamp));
-    return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-    });
-}
-
-// دالة تعديل السعر
-function editPrice(drugName, index) {
-    // الحصول على السعر الحالي من العنصر
-    let currentPrice = $(`#price-${index}`).text();
+// ===================== CHECK FOR STORED SEARCH FROM DETAILS PAGE =====================
+function checkForStoredSearch() {
+    const searchType = localStorage.getItem('searchType');
+    const searchValue = localStorage.getItem('searchValue');
+    const currentActive = localStorage.getItem('currentActive');
     
-    // نافذة prompt لتعديل السعر
-    let newPrice = prompt(`تعديل سعر ${drugName}`, currentPrice);
-    
-    if (newPrice !== null && newPrice.trim() !== "") {
-        // تحديث السعر في الواجهة
-        $(`#price-${index}`).text(parseFloat(newPrice).toFixed(2));
+    if (searchType && searchValue) {
+        localStorage.removeItem('searchType');
+        localStorage.removeItem('searchValue');
+        localStorage.removeItem('currentActive');
         
-        // تحديث السعر في قاعدة البيانات (allDrugz)
-        for (let j = 0; j < allDrugz.length; j++) {
-            if (allDrugz[j].name === drugName) {
-                // حفظ السعر القديم قبل التحديث
-                allDrugz[j].oldprice = allDrugz[j].price;
-                // تحديث السعر الجديد
-                allDrugz[j].price = newPrice;
-                // تحديث تاريخ التعديل
-                allDrugz[j].Date_updated = Date.now().toString();
-                
-                // حفظ في localStorage إذا كنت تستخدمه
-                localStorage.setItem('drugsData', JSON.stringify(allDrugz));
-                
-                showToast(`✅ تم تعديل سعر ${drugName} بنجاح`, "success");
-                break;
-            }
-        }
-    }
-}
-// ✅ هذا السطر مهم جداً لجعل الدالة معرفة عالمياً
-window.editPrice = editPrice;
-// تحميل قاعدة البيانات عند تحميل الصفحة
-
-// دالة لتنظيف النص من الأحرف الخاصة
-function cleanForJS(str) {
-    if (!str) return "";
-    return str
-        .replace(/\\/g, "\\\\")
-        .replace(/'/g, "\\'")
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, " ")
-        .replace(/\r/g, " ");
-}
-window.handelData = function(drug, i) {
-    var {
-        name, arabic, active, price, oldprice = "N/A", units: unite,
-        dosage_form: dosageForm = "default", description, details,
-        barcode, company, route, Date_updated
-    } = drug;
-
-    // 1. تنسيق للعرض (جماليات)
-    const fName = formatToCapital(name);
-    const fActive = formatToCapital(active);
-    const fDesc = formatToCapital(description || 'غير مصنف');
-
-    // 2. تنظيف للبرمجة (منع كسر الكود في onclick)
-    const safeActive = cleanForJS(active);
-    const safeName = cleanForJS(name);
-    const safeArabic = cleanForJS(arabic);
-    const safeDesc = cleanForJS(fDesc);
-    const safeDetails = cleanForJS(details);
-    const safeBarcode = cleanForJS(barcode);
-    const safeCompany = cleanForJS(company);
-    const safeRoute = cleanForJS(route);
-    const safeDosageForm = cleanForJS(dosageForm);
-
-    // 3. حالة التوفر
-    var avalebyl = "";
-    if(name && name.toLowerCase().includes("n/a")) avalebyl = "هذا الصنف غير متاح";
-    else if(name && name.toLowerCase().includes("(cancelled)")) avalebyl = "تم إلغاء الصنف";
-
-    var unitePrice = price / unite;
-    var imageUrl = (typeof getImageByName === 'function') ? (getImageByName(name) || getImageByRoute(route)) : "";
-    var lastUpdated = Date_updated ? (typeof formatDate === 'function' ? formatDate(Date_updated) : Date_updated) : "غير متاح";
-    
-    // 4. دواعي الاستعمال والأمان
-    let indicationText = "لم يتم تحديد دواعي الاستعمال";
-    let safetyHTML = ""; 
-
-    if (typeof indicationsDB !== 'undefined' && active) {
-        // تنظيف المادة الفعالة للبحث
-        const cleanActive = active.toLowerCase().trim();
-        
-        // البحث بالمطابقة التامة أولاً
-        let entry = indicationsDB[cleanActive];
-        
-        // إذا لم نجد مطابقة تامة، نجرب أول جزء قبل +
-        if (!entry && cleanActive.includes('+')) {
-            const firstPart = cleanActive.split('+')[0].trim();
-            entry = indicationsDB[firstPart];
-        }
-        
-        // إذا لم نجد مطابقة تامة، نجرب أول جزء قبل / 
-        if (!entry && cleanActive.includes('/')) {
-            const firstPart = cleanActive.split('/')[0].trim();
-            entry = indicationsDB[firstPart];
-        }
-        
-        // إذا وجدنا entry
-        if (entry) {
-            // استخراج نص دواعي الاستعمال حسب الشكل الدوائي
-            if (typeof entry === 'string') {
-                indicationText = entry;
-            } else if (entry.usage) {
-                // إذا كان فيه usage مخصص لكل شكل دوائي
-                const formKey = dosageForm ? dosageForm.toLowerCase() : "default";
-                indicationText = entry.usage[formKey] || entry.usage["default"] || "دواعي استعمال عامة";
-            } else {
-                // إذا كان entry object عادي
-                const formKey = dosageForm ? dosageForm.toLowerCase() : "default";
-                indicationText = entry[formKey] || entry["default"] || "دواعي استعمال عامة";
-            }
-
-            // معالجة بيانات الأمان (safety)
-            const fLow = dosageForm ? dosageForm.toLowerCase() : "";
-            const isTopical = fLow.includes('eye') || fLow.includes('ear') || fLow.includes('nasal') || fLow.includes('ophthalmic');
-            const isPediatric = fLow.includes('suspension') || fLow.includes('syrup') || fLow.includes('supp') || (fLow.includes('drops') && !isTopical) || (name && name.toLowerCase().includes('infant')) || (name && name.toLowerCase().includes('ped'));
-                   
-            if (entry.safety && !isPediatric) {
-                let cat = entry.safety.preg || "?";
-                let color = "#808080";
-                if (cat === "A") color = "#2e7d32";      
-                else if (cat === "B") color = "#4caf50"; 
-                else if (cat === "C") color = "#fbc02d"; 
-                else if (cat === "D") color = "#f57c00"; 
-                else if (cat === "X") color = "#d32f2f";
-
-                safetyHTML = `
-                <div style="display: inline-flex; align-items: center; gap: 5px; background: white; padding: 2px 8px; border-radius: 20px; border: 1px solid ${color}; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-right: auto;">
-                    <b style="color: ${color}; font-size: 11px; white-space: nowrap;">فئة الحمل: ${cat} 🤰</b>
-                    <span style="width: 8px; height: 8px; background-color: ${color}; border-radius: 50%;"></span>
-                </div>`;
-            }
-        }
-    }
-
-    // تنظيف indicationText
-    const safeIndication = cleanForJS(indicationText);
-    
-    let added = (typeof isItemAdded === 'function') ? isItemAdded(name, arabic) : false;
-    let btnClass = added ? 'add-btn added' : 'add-btn';
-    let btnIcon  = added ? 'fa-check' : 'fa-plus';
-    let disabled = added ? 'disabled' : '';
-
-    // 5. بناء الكارد النهائي
-    $('#resultDiv').append(`
-        <div class="outerDvFlx drugCard" style="display: flex; flex-direction: column; padding: 10px; border-bottom: 1px solid #ddd; background:#fff; border-radius:8px; margin:8px auto; box-shadow:0 0 6px 1px rgb(0 0 0 / 15%);">
-            <div style="display: flex; flex-direction: row; align-items: center; width: 100%; justify-content: space-between; flex-wrap: nowrap;">
-                <div style="width: 65px; height: 65px; flex-shrink: 0; border: 1px solid #ccc; border-radius: 5px; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #fff;">
-                    <img src="${imageUrl}" alt="صورة الدواء" style="max-width: 100%; max-height: 100%; object-fit: cover;">
-                </div>
-
-                <div style="flex-grow: 1; padding: 0 10px; min-width: 0;">
-                    <div class="nameTD" style="text-align: left !important; display: flex; flex-direction: column; align-items: flex-start;">
-                        <span style="font-size: 16px; font-weight: bold; color: #333; line-height: 1.2;">${fName}</span>
-                        <span style="font-size: 12px; color: gray; direction: rtl; align-self: flex-start;">${arabic}</span>
-                        <span style="font-size: 14px; color: blue; line-height: 1.2;">🧪 ${fActive}</span> 
-                        <span style="font-size: 12px; color: green;">📂 ${fDesc}</span>
-                        <span style="font-size: 12px; color: darkblue;">Units: ${unite} <span style="color:red">(unit: ${unitePrice.toFixed(1)} L.E)</span></span>
-                        <span style="font-size: 13px; color: red; font-weight: bold;">${avalebyl}</span>
-                    </div>
-                </div>
-
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; min-width: 95px;">
-                    <div style="width: 90px; padding: 6px; text-align: center; border: 2px solid #ff4d4d; border-radius: 8px; background-color: #fff3f3;">
-                        <span style="font-size:9px; color:purple;">${lastUpdated}</span><br>
-                        <span style="color:#d60000; font-size: 17px; font-weight: bold;">${parseFloat(price).toFixed(2)}</span><br>
-                        <span style="font-size: 9px; color:gray"><del>${oldprice} L.E</del></span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top:8px; display: flex; align-items: center; justify-content: space-between; background:#eafaea; padding:8px; border-radius:5px; color:#2d8a2d; border-right: 4px solid #2d8a2d; direction: rtl; text-align: right;">
-                <div style="display: flex; align-items: center; gap: 5px; flex-wrap: wrap;">
-                    <b style="white-space: nowrap; font-size:12px"> دواعي الاستعمال:</b>
-                    <span style="unicode-bidi: embed; font-size: 12px;">${indicationText} 💡</span>
-                </div>
-                <div style="margin-right: 15px;">
-                    ${safetyHTML}
-                </div>
-            </div>
-
-            <div class="buttons-container" style="display: flex; flex-wrap: wrap; width: 100%; margin-top: 10px; gap: 6px;">
-                <button onclick="getSimilar('${safeActive}')" class="btn btn-success metaBtnn" style="flex-grow: 1; flex-basis: 100px; font-size: 13px; padding: 8px 5px; border-radius: 6px;">Similars 👌</button>
-                <button onclick="getAlt('${safeDesc}', '${safeActive}')" class="btn btn-primary metaBtnn" style="flex-grow: 1; flex-basis: 100px; font-size: 13px; padding: 8px 5px; border-radius: 6px;">Alts 💊</button>
-                <button onclick="moreInfo('${safeName}', '${safeArabic}', '${safeActive}', '${price}', '${oldprice}', '${safeDesc}', '${safeDosageForm}', '${safeDetails}', '${safeBarcode}', '${safeCompany}', '${unite}', '${unitePrice}', '${safeRoute}', '${imageUrl}', '${safeIndication}')" class="btn btn-danger metaBtnn" style="flex-grow: 1; flex-basis: 100px; font-size: 13px; padding: 8px 5px; border-radius: 6px;">More.. 🕵</button>
-                <button class="${btnClass}" ${disabled} onclick="addItemsList(this,'${safeName}','${safeArabic}','${price}','${safeDosageForm}')"><i class="fa ${btnIcon}"></i></button>
-            </div>
-        </div>
-    `);
-};
-function getImageByRoute(route, dosageForm) {
-    if (!route) return "img/logo.png";
-
-    route = route.toLowerCase();
-    const form = dosageForm ? dosageForm.toLowerCase() : "";
-
-    // 1. فحص الأكياس والفوار أولاً (Sachets & Effervescent)
-    if (form.includes("sachet") || route.includes("sachet")) return "img/sachets.png";
-    if (form.includes("eff") || route.includes("eff")) return "img/eff.png";
-    
-    // 2. الحقن والمحاليل (Injection & Infusion)
-    if (route.includes("infusion")) return "img/infusion.png";
-    if (route.includes("injection") || route.includes("inj")) return "img/injction.png";
-
-    // 3. القطرات (Drops) - ترتيب ذكي
-    if (route.includes("dropeye") || (route.includes("eye") && route.includes("drop"))) return "img/dropeye.png";
-    if (route.includes("drop")) return "img/drop.png"; // قطرة عامة
-
-    // 4. الجهاز التنفسي والأنف
-    if (route.includes("inhal")) return "img/inhalation.png";
-    if (route.includes("nasal") || route.includes("nose")) return "img/nasal.png";
-    if (route.includes("spray")) return "img/spray.png";
-
-    // 5. المسارات الشائعة الأخرى
-    if (route.includes("oral.solid")) return "img/oralsolid.png";
-    if (route.includes("oral.liquid")) return "img/oralliquid.png";
-    if (route.includes("topical")) return "img/topical.png";
-    if (route.includes("rectal")) return "img/rectal.png";
-    if (route.includes("vaginal")) return "img/vaginal.png";
-    
-    // 6. حالات خاصة من القائمة
-    if (route.includes("eye")) return "img/eye.png";
-    if (route.includes("ear")) return "img/ear.png";
-    if (route.includes("mouth")) return "img/mouth.png";
-    if (form.includes("soap") || route.includes("soap")) return "img/soap.png";
-    if (form.includes("powder") || route.includes("powder")) return "img/powder.png";
-
-    // افتراضي إذا لم يتطابق شيء
-    return "img/logo.png";
-}
-
-
-// دالة لعرض الصورة بحجم أكبر
-function showLargeImage(imageUrl) {
-    var imgModal = document.getElementById('imageModal');
-    var imgElement = document.getElementById('modalImage');
-    imgElement.src = imageUrl;
-    imgModal.style.display = "block";
-	
-}
-
-// دالة لإغلاق الصورة عند الضغط خارجها
-function closeModal() {
-    document.getElementById('imageModal').style.display = "none";
-	
-}
-/* ================== CONFIG & VARIABLES ================== */
-/* ================== 1. CONFIG & GLOBAL VARIABLES ================== */
-const dosageFormIcons = {
-    // الأشكال الفموية
-    tablet: { icon: "💊", label: "أقراص" },
-    capsule: { icon: "💊", label: "كبسولات" },
-    syrup: { icon: "🥤", label: "شراب" },
-    suspension: { icon: "🥄", label: "معلق" },
-    sachet: { icon: "🧪", label: "أكياس" }, 
-    piece: { icon: "🍬", label: "قطع مضغ/حلاوة" },
-
-    // السوائل والنقط
-    drops: { icon: "💧", label: "نقط" },
-    "oral drops": { icon: "🍼", label: "نقط فموية" }, // تم وضع تنصيص هنا
-    "eye drops": { icon: "👁️", label: "قطرة عين" }, // تم وضع تنصيص هنا
-    "ear drops": { icon: "👂", label: "قطرة أذن" }, // تم وضع تنصيص هنا
-    nasal: { icon: "👃", label: "بخاخ أنف" },
-    solution: { icon: "🧪", label: "محلول" },
-    "mouth wash": { icon: "👄", label: "غرغرة/مضمضة" }, // تم وضع تنصيص هنا
-
-    // الحقن
-    injection: { icon: "💉", label: "حقن" },
-    vial: { icon: "🧪", label: "فيال (بودرة/سائل)" },
-    ampoule: { icon: "🧪", label: "أمبول" },
-    syringe: { icon: "💉", label: "سرنجة جاهزة" }, 
-    infusion: { icon: "🏥", label: "محلول وريدي" },
-    bottle: { icon: "🍼", label: "زجاجة" },
-
-    // الأشكال الموضعية (كريمات ودهانات)
-    cream: { icon: "🧴", label: "كريم" },
-    ointment: { icon: "🧴", label: "مرهم" },
-    gel: { icon: "🧴", label: "جل" },
-    lotion: { icon: "🧴", label: "لوشن" },
-    spray: { icon: "🌬️", label: "بخاخ موضعي" },
-    scrub: { icon: "🧼", label: "منظف رغوي" }, 
-    shampoo: { icon: "🧼", label: "شامبو طبي" },
-    patch: { icon: "🩹", label: "لاصق طبي" },
-
-    // التنفسي
-    inhaler: { icon: "😮‍💨", label: "استنشاق/بخاخة" },
-    respules: { icon: "🌬️", label: "محلول نيبولايزر" },
-
-    // أخرى
-    suppository: { icon: "🔻", label: "لبوس" },
-    vaginal: { icon: "🥚", label: "لبوس مهبلي" },
-    powder: { icon: "🧂", label: "بودرة" },
-    enema: { icon: "🧴", label: "حقنة شرجية" }
-};
-
-window.fullList = []; 
-window.currentList = [];
-window.sortPriceAsc = true;
-window.sortNameAsc = true;
-window.currentCompany = "all";
-window.currentFilterForm = "all";
-window.currentStrength = "all";
-/* ================== 1. FILL COMPANY FILTER ================== */
-window.fillCompanyFilter = function(list) {
-    const select = document.getElementById("companyFilter");
-    if (!select) return;
-    
-    select.innerHTML = `<option value="all">🏭 الشركات (${list.length})</option>`;
-
-    const multi = ["novartis", "gsk", "sanofi", "pfizer", "astrazeneca", "roche", "bayer", "servier"];
-    const bigL = ["amoun", "epico", "pharaonia", "sedico", "eva", "global nabi", "hikma"];
-
-    const companyMap = new Map();
-    list.forEach(d => {
-        if (d.company) {
-            const k = d.company.trim().toLowerCase();
-            companyMap.set(k, { name: d.company.trim(), count: (companyMap.get(k)?.count || 0) + 1 });
-        }
-    });
-
-    const groups = { 
-        "group:multi": { label: "🌍 دولية", items: [] }, 
-        "group:local": { label: "🏢 كبرى", items: [] }, 
-        "group:other": { label: "🏭 أخرى", items: [] } 
-    };
-
-    [...companyMap.entries()].sort().forEach(([key, data]) => {
-        if (multi.some(m => key.includes(m))) groups["group:multi"].items.push(data);
-        else if (bigL.some(l => key.includes(l))) groups["group:local"].items.push(data);
-        else groups["group:other"].items.push(data);
-    });
-
-    Object.keys(groups).forEach(id => {
-        const g = groups[id];
-        if (g.items.length > 0) {
-            select.innerHTML += `<option value="${id}" ${window.currentCompany === id ? 'selected' : ''} style="background:#d1e7dd; font-weight:bold;">🔎 كل: ${g.label}</option>`;
-            let gh = `<optgroup label="── ${g.label} ──">`;
-            g.items.forEach(item => {
-                gh += `<option value="${item.name.toLowerCase()}" ${window.currentCompany === item.name.toLowerCase() ? 'selected' : ''}>${item.name} [${item.count}]</option>`;
-            });
-            select.innerHTML += gh + `</optgroup>`;
-        }
-    });
-};
-
-/* ================== 2. FILL STRENGTH FILTER ================== */
-window.fillStrengthFilter = function(list) {
-    const select = document.getElementById("strengthFilter");
-    if (!select) return;
-    
-    select.innerHTML = `<option value="all">⚗️ كل التركيزات (${list.length})</option>`;
-    
-    const finalMap = {};
-    const groupsConfig = {
-        "solid": { label: "💊 صلب", forms: ["tablet", "capsule", "pill", "sachet", "powder"] },
-        "liquid": { label: "🥤 سائل", forms: ["syrup", "suspension", "drops"] },
-        "injectable": { label: "💉 حقن", forms: ["injection", "vial", "ampoule", "infusion"] },
-        "topical": { label: "🧴 موضعي", forms: ["cream", "ointment", "gel", "lotion", "paint"] },
-        "other": { label: "📦 أخرى", forms: [] }
-    };
-
-list.forEach(d => {
-        let str = extractStrength(d); // استخراج التركيز باستخدام الدالة المطورة
-        if(!str) return; 
-
-        // توحيد شكل النص (إزالة النقاط الزائدة في الوحدات لضمان التجميع الصحيح)
-        str = str.replace(/i\.u/g, "iu").toLowerCase();
-
-        const form = (d.dosage_form || "غير محدد").toLowerCase();
-        let tg = "other";
-        
-        // تحديد المجموعة (صلب، سائل، إلخ)
-        for (const [k, c] of Object.entries(groupsConfig)) { 
-            if (c.forms.some(f => form.includes(f))) { 
-                tg = k; 
-                break; 
-            } 
-        }
-
-        if(!finalMap[tg]) finalMap[tg] = new Map();
-        
-        // المفتاح الذي سيظهر في القائمة المنسدلة
-        const key = `${str} – ${d.dosage_form}`;
-        
-        // تصحيح عداد العناصر داخل الـ Map
-        const currentCount = finalMap[tg].get(key) || 0;
-        finalMap[tg].set(key, currentCount + 1);
-    });
-
-    // رسم القائمة المنسدلة
-    Object.keys(groupsConfig).forEach(groupId => {
-        const groupItems = finalMap[groupId];
-        if (groupItems && groupItems.size > 0) {
-            let groupHtml = `<optgroup label="── ${groupsConfig[groupId].label} ──">`;
-            [...groupItems.entries()]
-                .sort((a,b) => a[0].localeCompare(b[0], undefined, {numeric:true}))
-                .forEach(([k, c]) => {
-                    groupHtml += `<option value="${k}">${k} [${c}]</option>`;
-                });
-            select.innerHTML += groupHtml + `</optgroup>`;
-        }
-    });
-};
-/* ================== 3. RENDER SORT BAR (تعديل بسيط لاستدعاء الدوال) ================== */
-window.renderSortButtons = function() {
-    // ... نفس كود renderSortButtons السابق ...
-    // تأكد فقط أن السطرين الأخيرين هما:
-    window.fillCompanyFilter(window.fullList);
-    window.fillStrengthFilter(window.fullList);
-};
-// دالة لتنسيق النصوص: تحويل أول حرف من كل كلمة لكبير والباقي صغير
-function formatToCapital(str) {
-    if (!str) return "";
-    return str.toLowerCase().split(' ').map(word => {
-        return word.charAt(0).toUpperCase() + word.slice(1);
-    }).join(' ');
-}
-
-/* ================== 3. CORE LOGIC (REDRAW & FILTER) ================== */
-window.redrawList = function() {
-    if ($('#sortBar').length === 0) window.renderSortButtons();
-    $('#resultDiv .drugCard').remove();
-    $('#resultDiv .no-results').remove();
-
-    if (window.currentList.length === 0) {
-        $('#resultDiv').append('<p class="no-results" style="text-align:center; padding:20px; width:100%;">عذراً، لا توجد نتائج تطابق بحثك.</p>');
-    } else {
-        window.currentList.forEach((drug, i) => window.handelData(drug, i));
-    }
-};
-
-window.applyFilters = function() {
-    window.currentList = window.fullList.filter(d => {
-        const company = (d.company || "").trim().toLowerCase();
-        const form = (d.dosage_form || "").trim().toLowerCase();
-        const strength = extractStrength(d);
-
-        let matchForm = (window.currentFilterForm === "all") || 
-            (window.currentFilterForm.startsWith("group:") && checkGroupMatch(window.currentFilterForm.split(":")[1], form)) ||
-            (form === window.currentFilterForm);
-
-        let matchComp = (window.currentCompany === "all") || 
-            (window.currentCompany.startsWith("group:") && checkCompanyGroupMatch(window.currentCompany.split(":")[1], company)) ||
-            (company === window.currentCompany);
-
-        let matchStr = (window.currentStrength === "all");
-        if (!matchStr) {
-            const [selS, selF] = window.currentStrength.split(" – ").map(s => s.trim().toLowerCase());
-            matchStr = (strength === selS && form === selF);
-        }
-        return matchForm && matchComp && matchStr;
-    });
-    window.redrawList();
-};
-
-function checkGroupMatch(gk, form) {
-    const gConf = {
-        "solid": ["tablet", "capsule", "pill", "sachet", "powder"],
-        "liquid": ["syrup", "suspension", "drops", "solution"],
-        "injectable": ["injection", "vial", "ampoule", "infusion"],
-        "topical": ["cream", "ointment", "gel", "lotion", "paint", "solution"],
-        "supp": ["suppository", "pessary"],
-        "respiratory": ["spray", "inhaler", "nasal"]
-    };
-    return gConf[gk]?.includes(form);
-}
-
-function checkCompanyGroupMatch(type, company) {
-    const multi = ["novartis", "gsk", "sanofi", "pfizer", "astrazeneca", "roche", "bayer", "servier"];
-    const bigL = ["amoun", "epico", "pharaonia", "sedico", "eva", "global nabi", "hikma"];
-    if (type === "multi") return multi.some(m => company.includes(m));
-    if (type === "local") return bigL.some(l => company.includes(l));
-    return !multi.some(m => company.includes(m)) && !bigL.some(l => company.includes(l));
-}
-
-/* ================== 4. UI RENDER (SORT BAR) ================== */
-window.renderSortButtons = function() {
-    const groupsConfig = {
-        "solid": { label: "أصناف صلبة", icon: "💊", forms: ["tablet", "capsule", "pill", "sachet", "powder"] },
-        "liquid": { label: "أشربة ونقط", icon: "🥤", forms: ["syrup", "suspension", "drops", "solution"] },
-        "injectable": { label: "حقن وأمبولات", icon: "💉", forms: ["injection", "vial", "ampoule", "infusion"] },
-        "topical": { label: "موضعي", icon: "🧴", forms: ["cream", "ointment", "gel", "lotion", "paint"] },
-        "supp": { label: "لبوس", icon: "🔻", forms: ["suppository", "pessary"] },
-        "other": { label: "أخرى", icon: "📦", forms: [] }
-    };
-
-    const formMap = new Map();
-    window.fullList.forEach(d => { if (d.dosage_form) { const f = d.dosage_form.toLowerCase().trim(); formMap.set(f, (formMap.get(f) || 0) + 1); } });
-
-    let formOptions = `<option value="all" ${window.currentFilterForm === 'all' ? 'selected' : ''}>📦 الأشكال (${window.fullList.length})</option>`;
-    Object.keys(groupsConfig).forEach(groupId => {
-        const config = groupsConfig[groupId];
-        let itemsHtml = ""; let gTotal = 0;
-        formMap.forEach((count, form) => {
-            const isMatch = (groupId === "other") ? !Object.values(groupsConfig).some(g => g.forms.includes(form)) : config.forms.includes(form);
-            if (isMatch) {
-                const icon = dosageFormIcons[form] || { icon: config.icon, label: form };
-                itemsHtml += `<option value="${form}" ${window.currentFilterForm === form ? 'selected' : ''}>${icon.icon} ${icon.label} [${count}]</option>`;
-                gTotal += count;
-            }
-        });
-        if (gTotal > 0) {
-            formOptions += `<option value="group:${groupId}" ${window.currentFilterForm === 'group:'+groupId ? 'selected' : ''} style="background:#e3f2fd; font-weight:bold;">🔎 كل: ${config.label} [${gTotal}]</option>`;
-            formOptions += `<optgroup label="──────────">${itemsHtml}</optgroup>`;
-        }
-    });
-
-    if($('#sortBar').length === 0) {
-        $('#resultDiv').prepend(`<div id="sortBar" style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; padding:10px; background:#fcfcfc; border-bottom:1px solid #ddd; position:sticky; top:0; z-index:1000;"></div>`);
-    }
-
-    $('#sortBar').html(`
-        <button onclick="window.sortByPrice()" class="btn btn-sm btn-light" style="border:1px solid #ccc; flex:1;">💰 السعر</button>
-        <button onclick="window.sortByName()" class="btn btn-sm btn-light" style="border:1px solid #ccc; flex:1;">🔤 الاسم</button>
-        <select id="formFilter" onchange="window.filterByForm(this.value)" style="flex:1.5; padding:5px; border-radius:5px;">${formOptions}</select>
-        <select id="companyFilter" onchange="window.currentCompany=this.value; window.applyFilters();" style="flex:1.5; padding:5px; border-radius:5px;"></select>
-        <select id="strengthFilter" onchange="window.currentStrength=this.value; window.applyFilters();" style="flex:2; padding:5px; border-radius:5px;"></select>
-    `);
-
-    if (typeof fillCompanyFilter === "function") fillCompanyFilter(window.fullList);
-    if (typeof fillStrengthFilter === "function") fillStrengthFilter(window.fullList);
-};
-
-/* ================== 5. HELPER FUNCTIONS ================== */
-function extractStrength(drug) {
-    if (!drug) return "";
-    // دمج الاسم والجرعة للبحث الشامل
-    let searchText = `${drug.name || ""} ${drug.dose || ""}`.toLowerCase();
-    
-    // 1. تنظيف النص: تحويل i.u. أو i. u إلى iu لسهولة الالتقاط
-    searchText = searchText.replace(/i\.?\s?u\.?/gi, "iu");
-
-    // 2. ريجيكس متطور جداً:
-    // يلتقط الأرقام مثل (200.000 أو 10/10 أو 500) 
-    // متبوعة بوحدات مثل (iu أو mg) 
-    // مع إمكانية وجود تكملة مثل (/1ml)
-    const complexRegex = /(\d{1,3}(?:\.\d{3})*(?:[\.,]\d+)?|\d+(?:\/\d+)*)\s*(iu|mg|ml|mcg|gm|g|%)(?:\s*[\/]\s*\d*\s*(ml|mg|gm|g|iu))?/gi;
-    
-    const matches = searchText.match(complexRegex);
-
-    if (matches) {
-        // تنظيف النتيجة النهائية (إزالة المسافات وتوحيد النقاط)
-        let result = matches[0].toLowerCase()
-            .replace(/\s+/g, "")
-            .replace(/,/g, ".");
-            
-        return result;
-    }
-    return "";
-}
-
-window.filterByForm = function(val) {
-    window.currentFilterForm = (val || "all").toLowerCase().trim();
-    window.currentStrength = "all";
-    window.applyFilters();
-};
-
-window.sortByPrice = function() {
-    window.currentList.sort((a,b)=> window.sortPriceAsc ? (parseFloat(a.price)||0)-(parseFloat(b.price)||0) : (parseFloat(b.price)||0)-(parseFloat(a.price)||0));
-    window.sortPriceAsc = !window.sortPriceAsc;
-    window.redrawList();
-};
-
-window.sortByName = function() {
-    window.currentList.sort((a,b)=> window.sortNameAsc ? (a.name||"").localeCompare(b.name||"") : (b.name||"").localeCompare(a.name||""));
-    window.sortNameAsc = !window.sortNameAsc;
-    window.redrawList();
-};
-/* ================== SIMILAR ================== */
-
-function getSimilar(active){
-
-    $('#resultDiv').html("");
-    $('#inpSearch').val("");
-
-    fullList = [];
-    currentList = [];
-    currentFilterForm = "all";
-    currentCompany = "all";
-
-    if(!active){
-        $('#resultDiv').html("<div class='alertResulte'>No Similars Found</div>");
-        return;
-    }
-
-    allDrugz.forEach(drug=>{
-        if(
-            drug.active &&
-            drug.active.trim().toLowerCase() === active.trim().toLowerCase()
-        ){
-            fullList.push(drug);
-        }
-    });
-
-    if(fullList.length === 0){
-        $('#resultDiv').html("<div class='alertResulte'>No Similars Found</div>");
-        return;
-    }
-
-    fullList = fullList.slice(0,150);
-    currentList = [...fullList];
-
-    redrawList();
-    $('#resultDiv').scrollTop(0);
-}
-
-window.getSimilar = getSimilar;
-
-/* ================== ALTERNATIVE ================== */
-
-function getAlt(description,active){
-
-    $('#resultDiv').html("");
-    $('#inpSearch').val("");
-
-    fullList = [];
-    currentList = [];
-    currentFilterForm = "all";
-    currentCompany = "all";
-
-    if(!description){
-        $('#resultDiv').html("<div class='alertResulte'>No Alternatives Found</div>");
-        return;
-    }
-
-    allDrugz.forEach(drug=>{
-        if(
-            drug.description &&
-            drug.description.trim().toLowerCase() === description.trim().toLowerCase() &&
-            drug.active !== active
-        ){
-            fullList.push(drug);
-        }
-    });
-
-    if(fullList.length === 0){
-        $('#resultDiv').html("<div class='alertResulte'>No Alternatives Found</div>");
-        return;
-    }
-
-    fullList = fullList.slice(0,150);
-    currentList = [...fullList];
-
-    redrawList();
-    $('#resultDiv').scrollTop(0);
-}
-
-window.getAlt = getAlt;
-
-
-// expose to global scope
-window.filterByForm = filterByForm;
-
-    const advancedSearchOption = '<span class="spanSlidy">Advanced Search</span><hr style="margin:2px">';
-    $('.divSlidyInp').append(advancedSearchOption);
-function moreInfo(name, arabic, active, price, oldprice, description, dosage_form, details, barcode, company, unite, units, route, imageUrl, indications, dose = "") {
-    console.log("قاعدة بيانات التداخلات:", window.interactionsDB);
-    console.log("المادة الفعالة الحالية:", active);
-
-    // 1. إظهار الجدول وتصفير النتائج
-    $('#tableInfo').show();
-    $('#btn_print').hide();
-    $('#dafte').hide();
-    $('#resultDiv').html("");
-
-    // 2. ملء البيانات الأساسية
-    $('#name').html(name);
-    $('#nameArabic').html(arabic);
-    $('#active').html(active);
-    $('#price').html(price + ' L.E');
-    $('#oldprice').html("<del>" + oldprice + ' L.E' + "</del>");
-    $('#description').html(description);
-    $('#dosage_form').html(dosage_form);
-    $('#details').html(details);
-    $('#barcode').html(barcode);
-    $('#company').html(company);
-    $('#unite').html(unite);
-    $('#unitePrice').html(units + ' L.E');
-    $('#route').html(route);
-    $('#category').html(indications); 
-
-    // 3. عرض الصورة
-    $('#largeImage').html(`<img src="${imageUrl}" alt="صورة الدواء" style="max-width: 100%; height: auto; border-radius: 8px;">`);
-
-    // --- منطق التداخلات الدوائية ---
-    let interactionsHTML = "";
-    const iDB = window.interactionsDB;
-
-    if (iDB && active) {
-        const activeIngredients = active.toLowerCase().split(/[+/ ,]+/).map(item => item.trim());
-        let foundInteractions = [];
-
- activeIngredients.forEach(singleActive => {
-    Object.keys(iDB).forEach(dbKey => {
-        // تحويل الطرفين لحروف صغيرة والتأكد من وجود الكلمة
-        if (singleActive.toLowerCase().trim().includes(dbKey.toLowerCase().trim())) {
-            iDB[dbKey].forEach(inter => {
-                foundInteractions.push({ withDrug: inter.withDrug, message: inter.message });
-            });
-        }
-    });
-});
-
-        const uniqueInteractions = Array.from(new Map(foundInteractions.map(item => [item.withDrug, item])).values());
-
-        if (uniqueInteractions.length > 0) {
-            interactionsHTML = `
-                <div id="interactionBlock" style="margin-top:15px; background:#fff5f5; padding:15px; border-radius:10px; border-right: 6px solid #d32f2f; direction: rtl; text-align: right; border: 1px solid #ffcccc;">
-                    <b style="color:#c62828; font-size:14px; display:block; margin-bottom:8px;">⚠️ تنبيهات التداخلات الدوائية:</b>
-                    <div style="font-size: 13px; color: #333; line-height: 1.6;">
-
-			${uniqueInteractions.map(inter => `
-		<div style="margin-bottom:6px; border-bottom: 1px dashed #ffcccc; padding-bottom:4px;">
-			<span style="color:#d32f2f; font-weight:bold;">
-            • مع <a href="javascript:void(0);" 
-                    onclick="searchByIngredient('${inter.withDrug}')" 
-                    style="color:#d32f2f; text-decoration: underline; cursor: pointer;">
-                    ${inter.withDrug}
-                 </a>:
-        </span> 
-        <span>${inter.message}</span>
-    </div>
-`).join('')}
-                    </div>
-                </div>`;
-        }
-    }
-
-    // حقن التداخلات في العناصر المتاحة
-    if ($('#modalBody').length > 0) {
-        $('#modalBody').html(`
-            <div style="text-align:right; direction:rtl;">
-                <h3 style="color:#2c3e50;">${name}</h3>
-                <p style="color:#7f8c8d;">${arabic}</p>
-                <div id="interactionArea">${interactionsHTML}</div>
-            </div>
-        `);
-    } else {
-        console.error("عنصر modalBody غير موجود، سيتم البحث عن بدائل لعرض التداخلات.");
-    }
-
-    // حقن في الحاوية المخصصة إن وجدت
-    $('#interactionsContainer').html(interactionsHTML);
-
-    $('#detailsModal').modal('show');
-
-    // 4. تجهيز المتغيرات الموحدة
-    const activeLow = active ? active.toLowerCase().trim() : '';
-    const formLower = dosage_form ? dosage_form.toLowerCase() : "";
-    const rl = route ? route.toLowerCase() : ""; 
-    const doseLow = dose ? dose.toLowerCase() : "";
-
-    // 5. معالجة بيانات الأمان
-    const lactRef = { "L1": "آمن تماماً", "L2": "آمن غالباً", "L3": "آمن بحذر", "L4": "خطر محتمل", "L5": "ممنوع" };
-    $('#pregSafety, #lactSafety, #contraindications').html('--').css('background-color', 'transparent');
-
-    if (typeof indicationsDB !== 'undefined') {
-        const firstKey = activeLow.split('+')[0].trim();
-        const entry = indicationsDB[activeLow] || indicationsDB[firstKey];
-
-        if (entry && entry.safety) {
-            const isTopical = formLower.includes('eye') || formLower.includes('ear') || rl.includes('eye');
-            const isPed = (formLower.includes('suspension') || formLower.includes('syrup') || (formLower.includes('drops') && !isTopical)) 
-                          && !formLower.includes('vaginal') 
-                          && !formLower.includes('suppository')
-                          && !formLower.includes('ovule'); 
-
-            if (!isPed) {
-                const pCat = entry.safety.preg || "?";
-                let pBg = (pCat === "X") ? "#ffebee" : (pCat === "D") ? "#fff3e0" : (pCat === "C") ? "#fffde7" : "#e8f5e9";
-                const pNote = entry.safety.pregNote ? `<br><small style="color:#d32f2f; font-weight:bold;">⚠️ ${entry.safety.pregNote}</small>` : "";
-                $('#pregSafety').html(`<b>(${pCat})</b> ${pNote}`).css('background-color', pBg);
-                
-                const lCat = entry.safety.lact || "?";
-                $('#lactSafety').html(`<b>(${lCat})</b>: ${lactRef[lCat] || lCat}`);
-            } else {
-                $('#pregSafety, #lactSafety').html('<span style="color:gray; font-size:11px;">صنف خاص بالأطفال</span>');
-            }
-
-            let sensitivityAlert = "";
-            const isInjection = formLower.includes('vial') || formLower.includes('amp') || rl.includes('inject');
-            if (entry.safety.needsTest && isInjection) {
-                sensitivityAlert = `<div style="color: #fff; background: #d32f2f; padding: 10px; border-radius: 5px; margin-bottom: 8px; text-align: center; font-weight: bold;">🛑 تنبيه: يتطلب اختبار حساسية قبل الحقن</div>`;
-            }
-
-            let milkWarning = "";
-            const quinolones = ['ciprofloxacin', 'levofloxacin', 'moxifloxacin', 'doxycycline', 'tetracycline', 'minocycline'];
-            const isOral = formLower.includes('tablet') || formLower.includes('capsule');
-            if (isOral && quinolones.some(q => activeLow.includes(q))) {
-                milkWarning = "<br><div style='color:#e65100; font-weight:bold;'>⚠️ تنبيه امتصاص: يجب الفصل عن منتجات الألبان والمعادن بساعتين.</div>";
-            }
-
-            const contraText = entry.safety.contra || 'لا توجد موانع خاصة مسجلة';
-            
-            // إضافة التداخلات إلى خانة الموانع لضمان ظهورها حتى لو الـ Modal غير موجود
-            $('#contraindications').html(sensitivityAlert + contraText + milkWarning + interactionsHTML);
-        }
-    }
-
-    // 6. ترجمة طريقة الاستخدام
-    let routeAr = route; 
-
-    if (rl.includes('eye')) routeAr = '👁️ قطرة أو مرهم للعين';
-    else if (rl.includes('ear')) routeAr = '👂 قطرة للأذن';
-    else if (rl.includes('nasal') || rl.includes('nose')) routeAr = '👃 بخاخ أو نقط للأنف';
-    else if (rl.includes('oral.solid') || rl.includes('tablet') || rl.includes('capsule')) routeAr = '💊 أقراص أو كبسول عن طريق الفم';
-    else if (rl.includes('oral.liquid') || rl.includes('suspension') || rl.includes('syrup')) routeAr = '🧪 شرب عن طريق الفم';
-    else if (rl.includes('mouth') || rl.includes('oral.gel') || rl.includes('gargle')) routeAr = '👄 مضمضة أو جل للفم';
-    else if (rl.includes('injection') || rl.includes('vial') || rl.includes('amp') || rl.includes('powder') || rl.includes('subcutaneous')) {
-        if (activeLow.includes('insulin')) routeAr = '💉 حقن تحت الجلد (أنسولين)';
-        else if (activeLow.includes('enoxaparin') || activeLow.includes('heparin') || activeLow.includes('clexane')) routeAr = '💉 حقن مسبقة التعبئة تحت الجلد (للسيولة)';
-        else if (rl.includes('im') && !rl.includes('iv')) routeAr = '💉 حقن عضلي فقط (IM)';
-        else if (rl.includes('iv') && !rl.includes('im')) routeAr = '💉 حقن وريدي فقط (IV)';
-        else routeAr = '💉 حقن (عضلي أو وريدي حسب النوع)';
-    }
-    else if (rl.includes('topical') || rl.includes('cream') || rl.includes('gel') || rl.includes('ointment') || rl.includes('lotion')) routeAr = '🧴 دهان موضعي على الجلد';
-    else if (rl.includes('rectal') || rl.includes('suppository')) routeAr = '🍑 تحاميل (لبوس)';
-    else if (rl.includes('vaginal')) routeAr = '🌸 لبوس أو كريم مهبلي';
-    else if (rl.includes('inhalation') || rl.includes('respiratory') || rl.includes('inhaler')) routeAr = '🌬️ استنشاق (بخاخ للصدر)';
-
-    if (doseLow.includes('1x1') || doseLow.includes('once daily')) routeAr += ' [مرة واحدة يومياً]';
-    else if (doseLow.includes('2x1') || doseLow.includes('twice daily') || doseLow.includes('1x2')) routeAr += ' [مرتين يومياً]';
-    else if (doseLow.includes('3x1') || doseLow.includes('three times') || doseLow.includes('1x3')) routeAr += ' [3 مرات يومياً]';
-
-    $('#routeArabic').html(routeAr);
-}
-
-window.moreInfo = moreInfo;
-window.searchByIngredient = function(ingredientName) {
-    $('#detailsModal').modal('hide');
-
-    // محاولة إيجاد حقل البحث بأكثر من طريقة
-    let searchInput = $('#searchInput'); // البحث بـ ID شهير
-    if (searchInput.length === 0) {
-        // إذا لم يجده، يبحث عن أي input نصي داخل شريط التنقل أو الصفحة
-        searchInput = $('input[type="text"], input[type="search"]').first();
-    }
-    
-    if (searchInput.length > 0) {
-        searchInput.val(ingredientName).focus();
-        searchInput.trigger('input').trigger('keyup'); // تشغيل الفلترة
-        window.scrollTo(0, 0);
-    } else {
-        console.error("لم يتم العثور على حقل البحث. تأكد من وجود <input id='searchInput'> في الـ HTML.");
-    }
-};
-  window.printDiv = function() {
-        window.frames['print_fream'].document.body.innerHTML = document.getElementById('printTable').innerHTML;
-        window.frames['print_fream'].window.focus();
-        window.frames['print_fream'].window.print();
-    }
-});
-document.getElementById("inpSearch").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        const inputField = this;
-        
-        // التحقق مما إذا كان المدخل يحتوي على عمليات حسابية فقط (للحماية)
-        // هذا السطر يتأكد أن المستخدم كتب أرقام أو علامات حسابية فقط
-        if (/[0-9+\-*/(). ]/.test(inputField.value)) {
-            try {
-                // تنفيذ العملية الحسابية
-                const result = Function('"use strict";return (' + inputField.value + ')')();
-                
-                // التأكد أن النتيجة رقم وليس شيئاً آخر
-                if (typeof result === 'number' && isFinite(result)) {
-                    inputField.value = result;
-                    inputField.classList.remove("input-error");
-                } else {
-                    throw new Error("Invalid Math");
-                }
-            }
-			catch (e) {
-                // تنفيذ تأثير الخطأ بدلاً من الـ alert
-                showInputError(inputField);
-            }
-        }
-    }
-});
-
-
-window.printDiv = function() {
-    window.frames['print_fream'].document.body.innerHTML = document.getElementById('printTable').innerHTML;
-    window.frames['print_fream'].window.focus();
-    window.frames['print_fream'].window.print();
-};
-
-// وظيفة الحاسبة في حقل البحث
-document.getElementById("inpSearch").addEventListener("keydown", function(event) {
-    if (event.key === "Enter") {
-        const inputField = this;
-        if (/[0-9+\-*/(). ]/.test(inputField.value)) {
-            try {
-                const result = Function('"use strict";return (' + inputField.value + ')')();
-                if (typeof result === 'number' && isFinite(result)) {
-                    inputField.value = result;
-                    inputField.classList.remove("input-error");
-                } else {
-                    throw new Error("Invalid Math");
+        if (searchType === 'similar') {
+            setTimeout(() => {
+                if (typeof window.getSimilar === 'function') {
+                    window.getSimilar(searchValue);
+                    showToastMessage(`🔍 جاري البحث عن مماثلات`, "info");
                 }
-            }
-            catch (e) {
-                // تفعيل تأثير الخطأ
-                if (typeof showInputError === 'function') showInputError(inputField);
-            }
+            }, 500);
+        } else if (searchType === 'alternative') {
+            setTimeout(() => {
+                if (typeof window.getAlt === 'function') {
+                    window.getAlt(searchValue, currentActive);
+                    showToastMessage(`🔍 جاري البحث عن بدائل`, "info");
+                }
+            }, 500);
         }
     }
-});
-// وظيفة إظهار الخطأ بشكل جمالي
-function showInputError(element) {
-    element.classList.add("input-error");
+}
+
+// ===================== EVENT HANDLERS =====================
+$(document).ready(function() {
+    $(document).on('click', '#searchMode', function(e) {
+        $('#divSlidyInp').slideToggle();
+        e.stopPropagation();
+    });
+
+    $(document).on('click', '.spanSlidy', function() {
+        $('#searchMode').val($(this).text());
+        $('#divSlidyInp').slideUp();
+        $('#inpSearch').trigger('keyup');
+    });
+
+    $(document).on('click', '#XDelt', function() {
+        $('#tableInfo').hide();
+        $('#btn_print').show();
+        $('#dafte').show();
+        $('#inpSearch').val("");
+        $('#resultDiv').html("");
+        $('#box_price').hide();
+        $('#minPrice, #maxPrice').val("");
+        $('#priceTypeSwitch').prop('checked', false);
+    });
+
+    $(document).on('click', '#btnTogglePrice', function() {
+        $('#box_price').slideToggle();
+    });
+
+    $(document).on('click', function() {
+        $('#divSlidyInp').slideUp();
+    });
     
-    // إعادة الحقل لشكلة الطبيعي بعد ثانية واحدة
-    setTimeout(() => {
-        element.classList.remove("input-error");
-    }, 1000);
-}
-// عند الضغط على زر الدارك
-function toggleDarkMode() {
-  document.body.classList.toggle("dark");
+    checkForStoredSearch();
+});
 
-  localStorage.setItem(
-    "theme",
-    document.body.classList.contains("dark") ? "dark" : "light"
-  );
-}
-
-
-
-// عند فتح التطبيق
-window.onload = () => {
-  if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark");
-    document.getElementById("darkBtn").innerText = "☀️ الوضع النهاري";
-  }
-};
-  ThemeManager.init();
-
-function showToast(msg, type = "success"){
-  const toast = document.getElementById("toast");
-  toast.textContent = msg;
-  toast.className = `toast show ${type}`;
-  
-  setTimeout(() => {
-    toast.className = "toast";
-  }, 2500);
-}
-
-// تعريف الدالة على window لضمان وصول الـ HTML إليها
-window.setSearchMode = function(mode) {
-    const modeInput = $('#searchMode');
-    const slidyDiv = $('#divSlidyInp');
-
-    if (mode === 'name') {
-        modeInput.val("الأسم التجاري");
-    } else if (mode === 'active') {
-        modeInput.val("المادة الفعالة");
-    } else if (mode === 'pharma') {
-        modeInput.val("الفارماكولوجي");
-    } else if (mode === 'advanced') {
-        modeInput.val("Advanced Search");
-    }
-
-    // إخفاء القائمة
-    slidyDiv.hide();
-
-    // طباعة للـ Console للتأكد من التنفيذ
-    console.log("Search Mode Changed to: " + modeInput.val());
-
-    // تحديث البحث فوراً
-    $('#inpSearch').trigger('keyup');
-};
+// Theme
+if (typeof ThemeManager !== 'undefined') ThemeManager.init();
 
 </script>
+<!-- لوحة الإعدادات -->
+<div id="settingsPanel" class="settings-panel" style="display:none;">
+    <div class="settings-header">
+        <h3>⚙️ الإعدادات</h3>
+        <button class="settings-close" onclick="closeSettings()">&times;</button>
+    </div>
+    <div class="settings-content">
+        <div class="setting-item">
+            <label>🌙 الوضع الليلي</label>
+            <label class="switch">
+                <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        
+        <div class="setting-item">
+            <label>📏 حجم الخط</label>
+            <div class="font-size-control">
+                <span>A-</span>
+                <input type="range" id="fontSizeSlider" min="12" max="24" step="1" onchange="changeFontSize(this.value)">
+                <span>A+</span>
+                <span id="fontSizeValue">16px</span>
+            </div>
+        </div>
+        
+        <button class="reset-btn" onclick="resetSettings()">🔄 إعادة ضبط الإعدادات</button>
+    </div>
+</div>
 
-
-
-
+<!-- زر الإعدادات -->
+<button class="settings-btn" onclick="openSettings()" title="الإعدادات">
+    ⚙️
+</button>
 </body>
 </html>

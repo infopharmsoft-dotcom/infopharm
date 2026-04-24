@@ -1,0 +1,12 @@
+{
+  "name": "infopharm",
+  "version": "2.0.0",
+  "description": "Egyptian Drug Information System",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8000",
+    "deploy": "firebase deploy"
+  },
+  "author": "Infopharm Team",
+  "license": "MIT"
+}

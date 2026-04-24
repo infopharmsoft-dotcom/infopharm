@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>شرح التطبيق - Infopharm</title>
+    <link rel="stylesheet" href="./lib/bootstrap-4.5.3.css">
+    <link rel="stylesheet" href="./lib/base.css">
+    <link rel="stylesheet" href="./lib/fontawesome.css">
+    <link rel="stylesheet" href="./lib/font-awesome.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .guide-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .guide-header {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .guide-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .guide-header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .guide-content {
+            padding: 25px;
+        }
+        
+        .guide-step {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8fafc;
+            border-radius: 20px;
+            border-right: 4px solid #48bb78;
+        }
+        
+        .guide-step h3 {
+            color: #2d3748;
+            font-size: 18px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .guide-step .step-number {
+            background: #48bb78;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .guide-step p {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-right: 40px;
+        }
+        
+        .guide-step ul {
+            margin-right: 40px;
+            margin-top: 10px;
+        }
+        
+        .guide-step li {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 5px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .feature-card h4 {
+            color: #2d3748;
+            font-size: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .feature-card p {
+            color: #4a5568;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #edf2f7;
+            padding: 12px;
+            margin: 8px 20px 20px;
+            border-radius: 60px;
+            color: #4a5568;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+        
+        .back-button:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<div id="includeHere"></div>
+
+<div class="guide-container">
+    <div class="guide-header">
+        <h1>📖 شرح استخدام التطبيق</h1>
+        <p>دليل سريع لاستخدام Infopharm</p>
+    </div>
+    
+    <div class="guide-content">
+        <div class="guide-step">
+            <h3>
+                <span class="step-number">1</span>
+                🔍 البحث عن الأدوية
+            </h3>
+            <p>يمكنك البحث عن أي دواء باستخدام:</p>
+            <ul>
+                <li>✍️ الاسم التجاري (عربي أو إنجليزي)</li>
+                <li>🧪 المادة الفعالة</li>
+                <li>📚 التصنيف الدوائي (الفارماكولوجي)</li>
+            </ul>
+            <p>فقط اكتب في شريط البحث وستظهر النتائج فوراً.</p>
+        </div>
+        
+        <div class="guide-step">
+            <h3>
+                <span class="step-number">2</span>
+                💰 فلترة الأسعار
+            </h3>
+            <p>اضغط على زر 💰 لفتح فلتر الأسعار، يمكنك:</p>
+            <ul>
+                <li>📊 تحديد الحد الأدنى والحد الأقصى للسعر</li>
+                <li>🔄 التبديل بين السعر الجديد والسعر القديم</li>
+            </ul>
+        </div>
+        
+        <div class="guide-step">
+            <h3>
+                <span class="step-number">3</span>
+                📋 دفتر النواقص
+            </h3>
+            <p>يمكنك إضافة الأدوية إلى دفتر النواقص:</p>
+            <ul>
+                <li>➕ اضغط على زر + لإضافة الدواء</li>
+                <li>🔢 اضغط على العدد لتعديل الكمية</li>
+                <li>📝 اضغط على الملاحظات لإضافة ملاحظة</li>
+                <li>🗑️ اضغط على سلة المهملات لحذف الصنف</li>
+                <li>🖨️ اضغط على زر الطباعة لطباعة الدفتر</li>
+            </ul>
+        </div>
+        
+        <div class="guide-step">
+            <h3>
+                <span class="step-number">4</span>
+                📄 صفحة التفاصيل
+            </h3>
+            <p>اضغط على أي دواء لعرض صفحة التفاصيل الكاملة:</p>
+            <ul>
+                <li>💊 المادة الفعالة والسعر والشركة</li>
+                <li>📚 التصنيف الدوائي (الفارماكولوجي)</li>
+                <li>📘 دواعي الاستعمال</li>
+                <li>🤰 فئة الحمل والرضاعة</li>
+                <li>⚠️ موانع الاستعمال والتنبيهات</li>
+                <li>🖼️ زر صور جوجل لعرض صور الدواء</li>
+            </ul>
+        </div>
+        
+        <div class="guide-step">
+            <h3>
+                <span class="step-number">5</span>
+                🎮 الميزات الإضافية
+            </h3>
+            <div class="feature-card">
+                <h4>🎮 اللعبة التعليمية</h4>
+                <p>اضغط على زر 🎮 للدخول إلى اللعبة التعليمية واختبار معلوماتك الدوائية.</p>
+            </div>
+            <div class="feature-card">
+                <h4>📊 النظام الإداري المالي</h4>
+                <p>اضغط على زر 📊 للدخول إلى النظام الإداري المالي لإدارة المبيعات والأرباح.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🧮 الآلة الحاسبة</h4>
+                <p>يمكنك استخدام شريط البحث كآلة حاسبة بسيطة، فقط اكتب العملية الحسابية واضغط Enter.</p>
+            </div>
+            <div class="feature-card">
+                <h4>🌙 الوضع الليلي</h4>
+                <p>يمكنك تبديل الوضع بين النهاري والليلي من زر الإعدادات في القائمة الجانبية.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="back-button" onclick="history.back()">
+        <span>🔙</span> العودة إلى التطبيق
+    </div>
+</div>
+
+<script src="./lib/jquery3.5.1.js"></script>
+<script src="./lib/bootstrap-4.5.3.js"></script>
+<script src="include.js"></script>
+
+</body>
+</html>

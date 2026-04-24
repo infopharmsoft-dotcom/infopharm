@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/details.html</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/about.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/guide.html</loc>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/privacy.html</loc>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://USERNAME.github.io/infopharm/disclaimer.html</loc>
+    <priority>0.5</priority>
+  </url>
+</urlset>
