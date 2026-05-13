@@ -316,9 +316,9 @@
 
 <script>
 // روابط الملفات
-// روابط الملفات
 const HOME_PAGE_URL = 'https://infopharmsoft-dotcom.github.io/infopharm/';
 const DRUGS_API_URL = 'https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/drugs.json';
+
 // المتغيرات العامة
 let allDrugz = [];
 let indicationsDB = {};
@@ -371,7 +371,6 @@ function goBackToHome() {
 }
 
 // ===================== تحميل البيانات =====================
-// ===================== تحميل البيانات =====================
 async function loadDrugsData() {
     try {
         const response = await fetch(DRUGS_API_URL + '?t=' + Date.now());
@@ -385,14 +384,13 @@ async function loadDrugsData() {
     }
 }
 
-// تحميل ملفات JS ديناميكياً مع timeout
+// تحميل ملفات JS ديناميكياً
 function loadScript(src, timeout = 5000) {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = src + '?t=' + Date.now();
         
         const timeoutId = setTimeout(() => {
-            console.warn(`⏰ انتهى وقت تحميل: ${src}`);
             reject(new Error(`Timeout loading ${src}`));
         }, timeout);
         
@@ -403,7 +401,6 @@ function loadScript(src, timeout = 5000) {
         
         script.onerror = () => {
             clearTimeout(timeoutId);
-            console.warn(`❌ فشل تحميل: ${src}`);
             reject(new Error(`Failed to load ${src}`));
         };
         
@@ -412,85 +409,34 @@ function loadScript(src, timeout = 5000) {
 }
 
 async function loadAllData() {
+    // 1. تحميل قائمة الأدوية (إجباري)
+    const drugsLoaded = await loadDrugsData();
+    if (!drugsLoaded) return false;
+    
+    // 2. محاولة تحميل indications.js (اختياري)
     try {
-        // 1. تحميل قائمة الأدوية (إجباري)
-        const drugsLoaded = await loadDrugsData();
-        if (!drugsLoaded) return false;
-        
-        // 2. محاولة تحميل indications.js (اختياري - لن يوقف التنفيذ)
-        try {
-            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/indications.js');
-            if (typeof indicationsDB !== 'undefined') {
-                console.log("✅ تم تحميل indicationsDB بنجاح");
-            } else {
-                console.log("⚠️ indicationsDB غير موجود - سيتم استخدام البيانات الافتراضية");
-                indicationsDB = {};
-            }
-        } catch(e) {
-            console.log("⚠️ فشل تحميل indications.js - سيتم استخدام البيانات الافتراضية");
-            indicationsDB = {};
+        await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/indications.js');
+        if (typeof indicationsDB !== 'undefined') {
+            console.log("✅ تم تحميل indicationsDB بنجاح");
         }
-        
-        // 3. محاولة تحميل interactionsDB.js (اختياري - لن يوقف التنفيذ)
-        try {
-            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/interactionsDB.js');
-            if (typeof window.interactionsDB !== 'undefined') {
-                interactionsDB = window.interactionsDB;
-                console.log("✅ تم تحميل interactionsDB بنجاح");
-            } else {
-                console.log("⚠️ interactionsDB غير موجود - سيتم استخدام البيانات الافتراضية");
-                interactionsDB = {};
-            }
-        } catch(e) {
-            console.log("⚠️ فشل تحميل interactionsDB.js - سيتم استخدام البيانات الافتراضية");
-            interactionsDB = {};
-        }
-        
-        return true;
     } catch(e) {
-        console.error("خطأ في تحميل البيانات:", e);
-        return false;
+        console.log("⚠️ فشل تحميل indications.js - سيتم استخدام البيانات الافتراضية");
+        indicationsDB = {};
     }
-}
-
-async function loadAllData() {
+    
+    // 3. محاولة تحميل interactionsDB.js (اختياري)
     try {
-        // تحميل قائمة الأدوية
-        const drugsLoaded = await loadDrugsData();
-        if (!drugsLoaded) return false;
-        
-        // تحميل indications.js
-        try {
-            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/indications.js');
-            if (typeof indicationsDB !== 'undefined') {
-                console.log("✅ تم تحميل indicationsDB بنجاح");
-            } else {
-                indicationsDB = {};
-            }
-        } catch(e) {
-            console.log("⚠️ فشل تحميل indications.js");
-            indicationsDB = {};
+        await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/interactionsDB.js');
+        if (typeof window.interactionsDB !== 'undefined') {
+            interactionsDB = window.interactionsDB;
+            console.log("✅ تم تحميل interactionsDB بنجاح");
         }
-        
-        // تحميل interactionsDB.js
-        try {
-            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/interactionsDB.js');
-            if (typeof window.interactionsDB !== 'undefined') {
-                interactionsDB = window.interactionsDB;
-                console.log("✅ تم تحميل interactionsDB بنجاح");
-            } else {
-                interactionsDB = {};
-            }
-        } catch(e) {
-            console.log("⚠️ فشل تحميل interactionsDB.js");
-            interactionsDB = {};
-        }
-        
-        return true;
     } catch(e) {
-        console.error("خطأ في تحميل البيانات:", e);
-        return false;
+        console.log("⚠️ فشل تحميل interactionsDB.js - سيتم استخدام البيانات الافتراضية");
+        interactionsDB = {};
     }
+    
+    return true;
 }
 
 // ===================== عرض البدائل =====================
