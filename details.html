@@ -371,6 +371,7 @@ function goBackToHome() {
 }
 
 // ===================== تحميل البيانات =====================
+// ===================== تحميل البيانات =====================
 async function loadDrugsData() {
     try {
         const response = await fetch(DRUGS_API_URL + '?t=' + Date.now());
@@ -384,15 +385,72 @@ async function loadDrugsData() {
     }
 }
 
-// تحميل ملفات JS ديناميكياً
-function loadScript(src) {
+// تحميل ملفات JS ديناميكياً مع timeout
+function loadScript(src, timeout = 5000) {
     return new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = src + '?t=' + Date.now();
-        script.onload = resolve;
-        script.onerror = reject;
+        
+        const timeoutId = setTimeout(() => {
+            console.warn(`⏰ انتهى وقت تحميل: ${src}`);
+            reject(new Error(`Timeout loading ${src}`));
+        }, timeout);
+        
+        script.onload = () => {
+            clearTimeout(timeoutId);
+            resolve();
+        };
+        
+        script.onerror = () => {
+            clearTimeout(timeoutId);
+            console.warn(`❌ فشل تحميل: ${src}`);
+            reject(new Error(`Failed to load ${src}`));
+        };
+        
         document.head.appendChild(script);
     });
+}
+
+async function loadAllData() {
+    try {
+        // 1. تحميل قائمة الأدوية (إجباري)
+        const drugsLoaded = await loadDrugsData();
+        if (!drugsLoaded) return false;
+        
+        // 2. محاولة تحميل indications.js (اختياري - لن يوقف التنفيذ)
+        try {
+            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/indications.js');
+            if (typeof indicationsDB !== 'undefined') {
+                console.log("✅ تم تحميل indicationsDB بنجاح");
+            } else {
+                console.log("⚠️ indicationsDB غير موجود - سيتم استخدام البيانات الافتراضية");
+                indicationsDB = {};
+            }
+        } catch(e) {
+            console.log("⚠️ فشل تحميل indications.js - سيتم استخدام البيانات الافتراضية");
+            indicationsDB = {};
+        }
+        
+        // 3. محاولة تحميل interactionsDB.js (اختياري - لن يوقف التنفيذ)
+        try {
+            await loadScript('https://raw.githubusercontent.com/infopharmsoft-dotcom/infopharm/refs/heads/main/interactionsDB.js');
+            if (typeof window.interactionsDB !== 'undefined') {
+                interactionsDB = window.interactionsDB;
+                console.log("✅ تم تحميل interactionsDB بنجاح");
+            } else {
+                console.log("⚠️ interactionsDB غير موجود - سيتم استخدام البيانات الافتراضية");
+                interactionsDB = {};
+            }
+        } catch(e) {
+            console.log("⚠️ فشل تحميل interactionsDB.js - سيتم استخدام البيانات الافتراضية");
+            interactionsDB = {};
+        }
+        
+        return true;
+    } catch(e) {
+        console.error("خطأ في تحميل البيانات:", e);
+        return false;
+    }
 }
 
 async function loadAllData() {
