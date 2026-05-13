@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>تفاصيل الصنف - Infopharm</title>
-    <link rel="stylesheet" href="./lib/bootstrap-4.5.3.css">
-    <link rel="stylesheet" href="./lib/base.css">
-    <link rel="stylesheet" href="./lib/fontawesome.css">
-    <link rel="stylesheet" href="./lib/font-awesome.min.css">
+    <title>تفاصيل الصنف - Infopharm Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -205,7 +203,7 @@
             line-height: 1.6;
             color: #4a5568;
             white-space: pre-line;
-			text-align:right
+            text-align: right;
         }
         
         /* شارات الأمان */
@@ -224,7 +222,7 @@
         .badge-preg-D { background: #fed7d7; color: #742a2a; }
         .badge-preg-X { background: #feb2b2; color: #9b2c2c; }
         
-        /* البدائل - تنسيق من اليمين لليسار */
+        /* البدائل */
         .alternatives-section {
             background: #f8fafc;
             padding: 20px;
@@ -333,7 +331,6 @@
             border-color: #e2e8f0;
         }
         
-        /* تنسيق دواعي الاستعمال للحفاظ على HTML */
         .card-content ul, .card-content ol {
             padding-right: 20px;
             margin: 8px 0;
@@ -448,8 +445,8 @@
     </div>
     
     <!-- زر العودة -->
-    <div class="back-button" onclick="history.back()">
-        <span>🔙</span> العودة إلى البحث
+    <div class="back-button" onclick="goBackToHome()">
+        <span>🔙</span> العودة إلى الصفحة الرئيسية
     </div>
 </div>
 
@@ -464,31 +461,26 @@
 <div id="interaction-warning" class="interaction-warning" style="display: none;"></div>
 <div id="toast" class="toast" style="display:none;"></div>
 
-<script src="allDrugz.js"></script>
-<script src="indications.js"></script>
-<script src="interactionsDB.js"></script>
-<script src="showData.js"></script>
-
 <script>
-// ===================== TOAST FUNCTION =====================
-function showToastMessage(msg, type = "success") {
-    const toast = document.getElementById("toast");
-    if (!toast) return;
-    toast.textContent = msg;
-    toast.style.display = "block";
-    toast.className = `toast show ${type}`;
-    setTimeout(() => { 
-        toast.style.display = "none";
-        toast.className = "toast";
-    }, 2500);
-}
+// ===================== الروابط الأساسية =====================
+// رابط الصفحة الرئيسية على Blogger - غيّره إلى رابط موقعك
+const HOME_PAGE_URL = 'https://your-blogger-site.blogspot.com/';
+
+// روابط ملفات البيانات من GitHub
+const DRUGS_API_URL = 'https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/drugs.json';
+const INDICATIONS_API_URL = 'https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/indications.json';
+const INTERACTIONS_API_URL = 'https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/interactionsDB.json';
+
+// ===================== المتغيرات العامة =====================
+let allDrugz = [];
+let indicationsDB = {};
+let interactionsDB = {};
 
 // ===================== دوال مساعدة =====================
 function formatDate(timestamp) {
     if (!timestamp) return "غير متاح";
     const date = new Date(parseInt(timestamp));
     if (isNaN(date.getTime())) return "غير متاح";
-    // تنسيق التاريخ كـ يوم/شهر/سنة (1/1/2026)
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
@@ -521,9 +513,41 @@ function translateRoute(route) {
     return route;
 }
 
-// ===================== عرض البدائل (من اليمين للشمال) =====================
+function showToastMessage(msg, type = "success") {
+    const toast = document.getElementById("toast");
+    if (!toast) return;
+    toast.textContent = msg;
+    toast.style.display = "block";
+    toast.style.backgroundColor = type === 'error' ? '#f44336' : '#4caf50';
+    toast.style.color = 'white';
+    toast.style.padding = '12px';
+    toast.style.borderRadius = '8px';
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.left = '50%';
+    toast.style.transform = 'translateX(-50%)';
+    toast.style.zIndex = '9999';
+    setTimeout(() => { 
+        toast.style.display = "none";
+    }, 2500);
+}
+
+function processHtmlContent(content) {
+    if (!content) return "لا توجد معلومات";
+    if (content.includes('<br') || content.includes('<b>') || content.includes('<ul>') || content.includes('<ol>')) {
+        return content;
+    }
+    return content.replace(/\n/g, '<br>');
+}
+
+// ===================== العودة إلى الصفحة الرئيسية =====================
+function goBackToHome() {
+    window.location.href = HOME_PAGE_URL;
+}
+
+// ===================== البحث عن بدائل =====================
 function findAlternatives(activeIngredient, currentName) {
-    if (!activeIngredient || typeof allDrugz === 'undefined') return;
+    if (!activeIngredient || !allDrugz.length) return;
     
     const targetActive = activeIngredient.toLowerCase().trim();
     const altListContainer = document.getElementById('alt-list');
@@ -585,46 +609,24 @@ function findAlternatives(activeIngredient, currentName) {
     }
 }
 
-// ===================== عرض التداخلات =====================
-function showInteractions(activeIngredient) {
-    const container = document.getElementById('interaction-warning');
-    if (!container || typeof interactionsDB === 'undefined') return;
-    
-    const activeLower = (activeIngredient || "").toLowerCase();
-    let interactions = [];
-    
-    Object.keys(interactionsDB).forEach(dbKey => {
-        if (activeLower.includes(dbKey.toLowerCase())) {
-            interactionsDB[dbKey].forEach(inter => {
-                interactions.push(`⚠️ مع ${inter.withDrug}: ${inter.message}`);
-            });
-        }
-    });
-    
-    if (interactions.length > 0) {
-        container.style.display = 'block';
-        container.innerHTML = `<strong>🚨 تنبيهات التداخلات الدوائية:</strong><br>${interactions.join('<br>')}`;
-    }
-}
-
-// ===================== الانتقال للبحث عن مماثلات =====================
+// ===================== البحث عن مماثلات =====================
 function searchSimilar(activeSub) {
     if (activeSub) {
         localStorage.setItem('searchType', 'similar');
         localStorage.setItem('searchValue', activeSub);
-        window.location.href = 'index.html';
+        window.location.href = HOME_PAGE_URL;
     } else {
         showToastMessage("لا توجد مادة فعالة للبحث", "error");
     }
 }
 
-// ===================== الانتقال للبحث عن بدائل =====================
+// ===================== البحث عن بدائل =====================
 function searchAlternative(description, active) {
     if (description) {
         localStorage.setItem('searchType', 'alternative');
         localStorage.setItem('searchValue', description);
         localStorage.setItem('currentActive', active || '');
-        window.location.href = 'index.html';
+        window.location.href = HOME_PAGE_URL;
     } else {
         showToastMessage("لا يوجد وصف دوائي للبحث", "error");
     }
@@ -640,41 +642,38 @@ function openGoogleImages(drugName) {
     }
 }
 
-// ===================== معالجة النصوص HTML =====================
-function processHtmlContent(content) {
-    if (!content) return "لا توجد معلومات";
-    // إذا كان المحتوى يحتوي على HTML tags، اعرضه كما هو
-    if (content.includes('<br') || content.includes('<b>') || content.includes('<ul>') || content.includes('<ol>')) {
-        return content;
+// ===================== تحميل البيانات =====================
+async function loadData() {
+    try {
+        // تحميل قائمة الأدوية
+        const drugsResponse = await fetch(DRUGS_API_URL + '?t=' + Date.now());
+        allDrugz = await drugsResponse.json();
+        allDrugz.sort((a, b) => (parseInt(b.Date_updated) || 0) - (parseInt(a.Date_updated) || 0));
+        
+        // تحميل دواعي الاستعمال
+        try {
+            const indResponse = await fetch(INDICATIONS_API_URL + '?t=' + Date.now());
+            indicationsDB = await indResponse.json();
+        } catch(e) { console.log("لم يتم تحميل indicationsDB"); }
+        
+        // تحميل التداخلات
+        try {
+            const interResponse = await fetch(INTERACTIONS_API_URL + '?t=' + Date.now());
+            interactionsDB = await interResponse.json();
+        } catch(e) { console.log("لم يتم تحميل interactionsDB"); }
+        
+        return true;
+    } catch(e) {
+        console.error("خطأ في تحميل البيانات:", e);
+        return false;
     }
-    // إذا كان نص عادي، استبدل الأسطر الجديدة بـ <br>
-    return content.replace(/\n/g, '<br>');
 }
 
-// ===================== الصفحة الرئيسية =====================
-let currentDrug = null;
-
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const drugName = urlParams.get('n');
-    
-    if (!drugName || typeof allDrugz === 'undefined') {
-        document.body.innerHTML = '<div class="loading">❌ لم يتم العثور على الدواء</div>';
-        return;
-    }
-    
-    currentDrug = allDrugz.find(d => d.name === drugName);
-    
-    if (!currentDrug) {
-        document.body.innerHTML = '<div class="loading">❌ الصنف غير موجود في قاعدة البيانات</div>';
-        return;
-    }
-    
-    // إظهار المحتوى
+// ===================== عرض تفاصيل الدواء =====================
+function displayDrugDetails(drug) {
     const mainContent = document.getElementById('main-content');
     mainContent.style.display = 'block';
     
-    // تحديث العناصر
     const updateText = (id, text) => {
         const el = document.getElementById(id);
         if (el) el.innerText = text || "غير محدد";
@@ -686,27 +685,26 @@ window.onload = function() {
     };
     
     // البيانات الأساسية
-    updateText('d-name', currentDrug.name);
-    updateText('d-arabic', currentDrug.arabic || currentDrug.name);
-    updateText('d-active', currentDrug.active || "غير مسجل");
-    updateText('d-price', `${parseFloat(currentDrug.price || 0).toFixed(2)} ج.م`);
-    updateText('d-oldprice', currentDrug.oldprice ? `${parseFloat(currentDrug.oldprice).toFixed(2)} ج.م` : "");
-    updateText('d-company', currentDrug.company || "غير مسجلة");
-    updateText('d-form', currentDrug.dosage_form || "غير محدد");
-    updateText('d-route', translateRoute(currentDrug.route));
-    updateText('d-update-date', formatDate(currentDrug.Date_updated));
-    updateText('d-pharmaco', currentDrug.description || "لا يوجد وصف دوائي");
-    updateText('d-scientific', currentDrug.details || currentDrug.description || "لا توجد معلومات علمية إضافية");
+    updateText('d-name', drug.name);
+    updateText('d-arabic', drug.arabic || drug.name);
+    updateText('d-active', drug.active || "غير مسجل");
+    updateText('d-price', `${parseFloat(drug.price || 0).toFixed(2)} ج.م`);
+    updateText('d-oldprice', drug.oldprice ? `${parseFloat(drug.oldprice).toFixed(2)} ج.م` : "");
+    updateText('d-company', drug.company || "غير مسجلة");
+    updateText('d-form', drug.dosage_form || "غير محدد");
+    updateText('d-route', translateRoute(drug.route));
+    updateText('d-update-date', formatDate(drug.Date_updated));
+    updateText('d-pharmaco', drug.description || "لا يوجد وصف دوائي");
+    updateText('d-scientific', drug.details || drug.description || "لا توجد معلومات علمية إضافية");
     
-    // تغيير الأيقونة حسب الشكل الدوائي
-    document.getElementById('drug-icon').innerHTML = getDrugIcon(currentDrug.dosage_form);
+    document.getElementById('drug-icon').innerHTML = getDrugIcon(drug.dosage_form);
     
-    // ===================== دواعي الاستعمال =====================
-    const activeKey = (currentDrug.active || "").toLowerCase().trim();
-    const indicationsData = (typeof indicationsDB !== 'undefined') ? indicationsDB[activeKey] : null;
+    // دواعي الاستعمال
+    const activeKey = (drug.active || "").toLowerCase().trim();
+    const indicationsData = indicationsDB[activeKey];
     
     if (indicationsData && typeof indicationsData === 'object') {
-        const form = (currentDrug.dosage_form || "").toLowerCase();
+        const form = (drug.dosage_form || "").toLowerCase();
         let usageText = indicationsData.usage?.default || "لا توجد دواعي استعمال مسجلة";
         
         if (form.includes('tablet') || form.includes('capsule')) {
@@ -719,7 +717,6 @@ window.onload = function() {
             usageText = indicationsData.usage?.oral_drops || usageText;
         }
         
-        // عرض دواعي الاستعمال مع الحفاظ على تنسيق HTML
         updateHtml('d-indications', processHtmlContent(usageText));
         
         const pregCat = indicationsData.safety?.preg || "غير محدد";
@@ -746,34 +743,120 @@ window.onload = function() {
         }
         updateText('d-warnings', contraText);
     } else {
-        updateHtml('d-indications', processHtmlContent(currentDrug.indications || "لم يتم تحديد دواعي الاستعمال"));
+        updateHtml('d-indications', processHtmlContent(drug.indications || "لم يتم تحديد دواعي الاستعمال"));
         updateHtml('d-pregnancy', `<span>فئة C (دراسات غير كافية)</span>`);
         updateHtml('d-lactation', `<span>آمن تحت إشراف طبي</span>`);
-        updateText('d-warnings', currentDrug.warnings || "الحساسية لأي من المكونات");
+        updateText('d-warnings', drug.warnings || "الحساسية لأي من المكونات");
     }
     
-    // ===================== أزرار الإجراءات =====================
-    document.getElementById('btn-similar').onclick = function() {
-        searchSimilar(currentDrug.active);
-    };
-    
-    document.getElementById('btn-alternative').onclick = function() {
-        searchAlternative(currentDrug.description, currentDrug.active);
-    };
-    
-    document.getElementById('btn-google-images').onclick = function(e) {
+    // أزرار الإجراءات
+    document.getElementById('btn-similar').onclick = () => searchSimilar(drug.active);
+    document.getElementById('btn-alternative').onclick = () => searchAlternative(drug.description, drug.active);
+    document.getElementById('btn-google-images').onclick = (e) => {
         e.preventDefault();
-        openGoogleImages(currentDrug.name);
+        openGoogleImages(drug.name);
     };
     
-    // عرض البدائل
-    findAlternatives(currentDrug.active, currentDrug.name);
+    // عرض البدائل والتداخلات
+    findAlternatives(drug.active, drug.name);
     
     // عرض التداخلات
-    showInteractions(currentDrug.active);
+    if (Object.keys(interactionsDB).length > 0 && drug.active) {
+        const activeLower = drug.active.toLowerCase();
+        const container = document.getElementById('interaction-warning');
+        let interactions = [];
+        
+        Object.keys(interactionsDB).forEach(dbKey => {
+            if (activeLower.includes(dbKey.toLowerCase())) {
+                interactionsDB[dbKey].forEach(inter => {
+                    interactions.push(`⚠️ مع ${inter.withDrug}: ${inter.message}`);
+                });
+            }
+        });
+        
+        if (interactions.length > 0) {
+            container.style.display = 'block';
+            container.innerHTML = `<strong>🚨 تنبيهات التداخلات الدوائية:</strong><br>${interactions.join('<br>')}`;
+        }
+    }
     
-    // التمرير للأعلى
     window.scrollTo(0, 0);
+}
+
+// ===================== تهيئة الصفحة =====================
+window.onload = async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const drugName = urlParams.get('n');
+    
+    if (!drugName) {
+        document.body.innerHTML = '<div class="loading">❌ لم يتم تحديد اسم الدواء</div>';
+        return;
+    }
+    
+    // عرض شاشة تحميل
+    document.body.innerHTML = '<div class="loading">⏳ جاري تحميل البيانات...</div>';
+    
+    // تحميل البيانات
+    const success = await loadData();
+    
+    if (!success || allDrugz.length === 0) {
+        document.body.innerHTML = '<div class="loading">❌ فشل تحميل البيانات. يرجى تحديث الصفحة</div>';
+        return;
+    }
+    
+    // البحث عن الدواء
+    const drug = allDrugz.find(d => d.name === drugName);
+    const drugLower = allDrugz.find(d => d.name?.toLowerCase() === drugName.toLowerCase());
+    const foundDrug = drug || drugLower;
+    
+    if (!foundDrug) {
+        document.body.innerHTML = '<div class="loading">❌ الصنف غير موجود في قاعدة البيانات</div>';
+        return;
+    }
+    
+    // إعادة بناء الهيكل وعرض التفاصيل
+    document.body.innerHTML = document.body.innerHTML + `
+        <div id="main-content" style="display: none;">
+            <div class="hero-header">
+                <div class="drug-icon" id="drug-icon">💊</div>
+                <h2 id="d-name"></h2>
+                <p id="d-arabic"></p>
+            </div>
+            <div class="action-buttons">
+                <button class="action-btn similar" id="btn-similar">🔄 مماثلات</button>
+                <button class="action-btn alternative" id="btn-alternative">💊 بدائل</button>
+                <a href="#" id="btn-google-images" class="action-btn google" target="_blank">🖼️ صور جوجل</a>
+            </div>
+            <div class="info-grid">
+                <div class="info-item"><span class="info-label">🧪 المادة الفعالة</span><span class="info-value" id="d-active"></span></div>
+                <div class="info-item"><span class="info-label">💰 السعر</span><span class="info-value"><span class="price-value" id="d-price"></span><span class="old-price" id="d-oldprice"></span></span></div>
+                <div class="info-item"><span class="info-label">🏭 الشركة</span><span class="info-value" id="d-company"></span></div>
+                <div class="info-item"><span class="info-label">📦 الشكل الدوائي</span><span class="info-value" id="d-form"></span></div>
+                <div class="info-item"><span class="info-label">📋 طريقة الاستخدام</span><span class="info-value" id="d-route"></span></div>
+                <div class="info-item"><span class="info-label">📅 آخر تحديث</span><span class="info-value" id="d-update-date"></span></div>
+            </div>
+            <div class="detail-card"><div class="card-title">📚 التصنيف الدوائي (الفارماكولوجي)</div><div class="card-content" id="d-pharmaco"></div></div>
+            <div class="detail-card"><div class="card-title">📘 دواعي الاستعمال</div><div class="card-content" id="d-indications"></div></div>
+            <div class="detail-card"><div class="card-title">🤰 الحمل والرضاعة</div><div class="card-content"><div id="d-pregnancy"></div><div id="d-lactation"></div></div></div>
+            <div class="detail-card"><div class="card-title">⚠️ موانع الاستعمال والتنبيهات</div><div class="card-content" id="d-warnings"></div></div>
+            <div class="detail-card"><div class="card-title">🔬 الوصف العلمي</div><div class="card-content" id="d-scientific"></div></div>
+            <div class="back-button" onclick="goBackToHome()"><span>🔙</span> العودة إلى الصفحة الرئيسية</div>
+        </div>
+        <div class="alternatives-section" id="alt-section" style="display: none;"><div class="section-title"><span>💊</span> بدائل متاحة (نفس المادة الفعالة)</div><div id="alt-list"></div></div>
+        <div id="interaction-warning" class="interaction-warning" style="display: none;"></div>
+        <div id="toast" class="toast" style="display:none;"></div>
+    `;
+    
+    // إعادة تعريف الدوال المطلوبة
+    window.goBackToHome = goBackToHome;
+    window.searchSimilar = searchSimilar;
+    window.searchAlternative = searchAlternative;
+    window.openGoogleImages = openGoogleImages;
+    window.showToastMessage = showToastMessage;
+    window.findAlternatives = findAlternatives;
+    
+    // عرض تفاصيل الدواء
+    displayDrugDetails(foundDrug);
 };
 </script>
 
