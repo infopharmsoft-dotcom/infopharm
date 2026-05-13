@@ -643,44 +643,24 @@ function openGoogleImages(drugName) {
 }
 
 // ===================== تحميل البيانات =====================
-// ===================== تحميل البيانات =====================
 async function loadData() {
     try {
-        // تحميل قائمة الأدوية (إجباري)
+        // تحميل قائمة الأدوية
         const drugsResponse = await fetch(DRUGS_API_URL + '?t=' + Date.now());
-        if (!drugsResponse.ok) throw new Error('فشل تحميل الأدوية');
         allDrugz = await drugsResponse.json();
         allDrugz.sort((a, b) => (parseInt(b.Date_updated) || 0) - (parseInt(a.Date_updated) || 0));
         
-        // تحميل دواعي الاستعمال (اختياري - في حالة وجود الملف)
+        // تحميل دواعي الاستعمال
         try {
             const indResponse = await fetch(INDICATIONS_API_URL + '?t=' + Date.now());
-            if (indResponse.ok) {
-                indicationsDB = await indResponse.json();
-                console.log("✅ تم تحميل indicationsDB بنجاح");
-            } else {
-                console.log("⚠️ ملف indications.json غير موجود - سيتم استخدام البيانات الافتراضية");
-                indicationsDB = {};
-            }
-        } catch(e) { 
-            console.log("⚠️ لم يتم تحميل indicationsDB - سيتم استخدام البيانات الافتراضية");
-            indicationsDB = {};
-        }
+            indicationsDB = await indResponse.json();
+        } catch(e) { console.log("لم يتم تحميل indicationsDB"); }
         
-        // تحميل التداخلات (اختياري - في حالة وجود الملف)
+        // تحميل التداخلات
         try {
             const interResponse = await fetch(INTERACTIONS_API_URL + '?t=' + Date.now());
-            if (interResponse.ok) {
-                interactionsDB = await interResponse.json();
-                console.log("✅ تم تحميل interactionsDB بنجاح");
-            } else {
-                console.log("⚠️ ملف interactionsDB.json غير موجود - سيتم استخدام البيانات الافتراضية");
-                interactionsDB = {};
-            }
-        } catch(e) { 
-            console.log("⚠️ لم يتم تحميل interactionsDB - سيتم استخدام البيانات الافتراضية");
-            interactionsDB = {};
-        }
+            interactionsDB = await interResponse.json();
+        } catch(e) { console.log("لم يتم تحميل interactionsDB"); }
         
         return true;
     } catch(e) {
