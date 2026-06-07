@@ -1,0 +1,11 @@
+{
+  "name": "infopharm-static",
+  "version": "1.0.0",
+  "description": "Static page generator for Infopharm drug database",
+  "scripts": {
+    "generate": "node generate.js && node sitemap.js"
+  },
+  "dependencies": {
+    "fflate": "^0.8.0"
+  }
+}
