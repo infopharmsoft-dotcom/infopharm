@@ -73,11 +73,12 @@ function buildPage(drug, slug) {
 <title>${escHtml(drug.name)} | سعر الدواء في مصر - Infopharm</title>
 <meta name="description" content="سعر ${escHtml(drug.name)} في مصر ${price} جنيه. المادة الفعالة: ${escHtml(drug.active)}. شركة: ${escHtml(drug.company)}. آخر تحديث: ${dateStr}"/>
 <meta name="keywords" content="${escHtml(drug.name)}, ${escHtml(drug.active)}, سعر دواء, أدوية مصر"/>
-<link rel="canonical" href="https://infopharmprice.github.io/drug/${slug}/"/>
+<link rel="canonical" href="https://infopharmsoft-dotcom.github.io/infopharm/drug/${slug}/"/>
 <meta property="og:title" content="${escHtml(drug.name)} | Infopharm"/>
 <meta property="og:description" content="سعر ${escHtml(drug.name)}: ${price} ج.م | ${escHtml(drug.active)}"/>
-<meta property="og:url" content="https://infopharmprice.github.io/drug/${slug}/"/>
+<meta property="og:url" content="https://infopharmsoft-dotcom.github.io/infopharm/drug/${slug}/"/>
 <meta property="og:type" content="product"/>
+<meta name="google-site-verification" content="8VaHhORs2kWN8gHYegdOOGHKn8ZypKAwJ8_i924trV8"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet"/>
 <style>
