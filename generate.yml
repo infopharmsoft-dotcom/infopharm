@@ -1,10 +1,9 @@
 name: Generate Static Drug Pages
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:  # تشغيل يدوي لو احتجت
-
+  workflow_dispatch:
+  repository_dispatch:
+    types: [drugs-updated]
 jobs:
   build:
     runs-on: ubuntu-latest
