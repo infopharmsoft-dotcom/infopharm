@@ -1,13 +1,16 @@
 name: Generate Static Drug Pages
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch:  # تشغيل يدوي لو احتجت
+  workflow_dispatch:
+  repository_dispatch:
+    types: [drugs-updated]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
