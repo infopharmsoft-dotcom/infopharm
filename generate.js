@@ -143,6 +143,35 @@ function buildIndicationsSection(drug, ind) {
   return html;
 }
 
+// ── تحذيرات خاصة بالشكل الدوائي ──
+function buildDosageWarnings(drug) {
+  const form = (drug.dosage_form || '').toLowerCase();
+  const needsTest = drug.needsTest === true || drug.needsTest === 'true';
+  let html = '';
+
+  // تحذير قطرات العين
+  if (form === 'eye drops') {
+    html += `
+    <div class="warning-box">
+      <div class="w-title">⏰ تحذير هيئة الدواء المصرية</div>
+      <p>قطرات العين صالحة للاستخدام لمدة <strong>شهر واحد فقط</strong> من تاريخ فتح العبوة، ويجب التخلص منها بعد ذلك حتى لو لم تنته الكمية.</p>
+    </div>`;
+  }
+
+  // تحذير اختبار الحساسية للحقن
+  if (form === 'vial' || form === 'amp' || form === 'ampoule' || 
+      form === 'injection' || form === 'i.v.' || form === 'i.m.' ||
+      needsTest) {
+    html += `
+    <div class="danger-box">
+      <div class="w-title">🚨 تحذير مهم — اختبار الحساسية</div>
+      <p>هذا الدواء يُعطى عن طريق الحقن ويتطلب <strong>إجراء اختبار حساسية قبل الحقن</strong>. يجب أن يتم تحت إشراف طبي متخصص في مكان مجهز للتعامل مع ردود الفعل التحسسية.</p>
+    </div>`;
+  }
+
+  return html;
+}
+
 // ── Template HTML ──
 function buildPage(drug, slug) {
   const price   = parseFloat(drug.price) || 0;
@@ -219,6 +248,12 @@ header span{font-size:12px;opacity:.75;display:block;}
 .info-box .box-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--txt);}
 .info-box p{font-size:13px;color:var(--txt2);line-height:1.7;margin:0;}
 .keywords{font-size:12px;color:var(--txt2);line-height:1.8;}
+.warning-box{background:#FFF3E0;border:1px solid #FF9800;border-right:4px solid #FF9800;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+.warning-box .w-title{font-size:13px;font-weight:700;color:#E65100;margin-bottom:6px;}
+.warning-box p{font-size:13px;color:#BF360C;line-height:1.7;margin:0;}
+.danger-box{background:#FFEBEE;border:1px solid #F44336;border-right:4px solid #F44336;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+.danger-box .w-title{font-size:13px;font-weight:700;color:#B71C1C;margin-bottom:6px;}
+.danger-box p{font-size:13px;color:#C62828;line-height:1.7;margin:0;}
 </style>
 </head>
 <body>
@@ -258,6 +293,7 @@ header span{font-size:12px;opacity:.75;display:block;}
   </div>
 
   ${buildIndicationsSection(drug, ind)}
+  ${buildDosageWarnings(drug)}
 
   <!-- معلومات + إخلاء مسؤولية + كلمات مفتاحية -->
   <div class="info-box blue">
