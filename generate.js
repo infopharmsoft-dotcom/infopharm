@@ -3,11 +3,19 @@ const fs   = require('fs');
 const path = require('path');
 const zlib = require('zlib');
 
-// ── تحميل وفك ضغط الداتا ──
+// ── تحميل drugs.json.gz ──
 const compressed = fs.readFileSync('drugs.json.gz');
 const drugs      = JSON.parse(zlib.gunzipSync(compressed).toString('utf8'));
-
 console.log(`✅ تم تحميل ${drugs.length} صنف`);
+
+// ── تحميل indications.json ──
+let indications = {};
+try {
+  indications = JSON.parse(fs.readFileSync('indications.json', 'utf8'));
+  console.log(`✅ تم تحميل indications.json`);
+} catch(e) {
+  console.log(`⚠️ indications.json مش موجود`);
+}
 
 // ── إنشاء مجلد الـ output ──
 const DIST = path.join(__dirname, 'dist');
@@ -25,8 +33,6 @@ function slugify(name) {
 
 function formatDate(ts) {
   if (!ts) return '';
-  const d = ts.toString();
-  if (d.length === 8) return `${d.slice(6)}/${d.slice(4,6)}/${d.slice(0,4)}`;
   const dt = new Date(Number(ts));
   if (isNaN(dt)) return '';
   return `${String(dt.getDate()).padStart(2,'0')}/${String(dt.getMonth()+1).padStart(2,'0')}/${dt.getFullYear()}`;
@@ -40,9 +46,16 @@ function escHtml(str) {
     .replace(/"/g,'&quot;');
 }
 
+// السماح بـ HTML محدود من indications
+function safeHtml(str) {
+  return String(str || '')
+    .replace(/&(?!amp;|lt;|gt;|quot;)/g,'&amp;')
+    .replace(/<(?!\/?b>)/g,'&lt;');
+}
+
 function priceChange(oldp, newp) {
   const o = parseFloat(oldp), n = parseFloat(newp);
-  if (!isNaN(o) && !isNaN(n) && n > o) {
+  if (!isNaN(o) && !isNaN(n) && o > 0 && n > o) {
     const pct = Math.round(((n - o) / o) * 100);
     return `<span class="badge-up">🔺 زيادة ${pct}%</span>
             <span class="old-price">${o.toFixed(2)} ج.م</span>`;
@@ -50,20 +63,102 @@ function priceChange(oldp, newp) {
   return '';
 }
 
-// iHerb Affiliate — كود الـ affiliate بتاعك (غيّر YOURCODE)
+// iHerb Affiliate
 const IHERB_CODE = 'YOURCODE';
 function iherbLink(drug) {
-  // بنبحث بالمادة الفعالة لأنها أكثر دقة
   const query = encodeURIComponent(drug.active || drug.name);
   return `https://www.iherb.com/search?kw=${query}&rcode=${IHERB_CODE}`;
 }
 
+// ── البحث عن indications بالمادة الفعالة ──
+function findIndication(active) {
+  if (!active) return null;
+  const key = active.toLowerCase().trim();
+  // بحث مباشر
+  for (const k of Object.keys(indications)) {
+    if (k.toLowerCase().trim() === key) return indications[k];
+  }
+  // بحث جزئي — لو المادة الفعالة تحتوي على الـ key أو العكس
+  for (const k of Object.keys(indications)) {
+    if (key.includes(k.toLowerCase().trim()) || k.toLowerCase().trim().includes(key)) {
+      return indications[k];
+    }
+  }
+  return null;
+}
+
+// ── بناء قسم الـ indications ──
+function buildIndicationsSection(drug, ind) {
+  if (!ind) return '';
+
+  const dosageForm = (drug.dosage_form || 'default').toLowerCase();
+  const usage = ind.usage
+    ? (ind.usage[dosageForm] || ind.usage['default'] || '')
+    : '';
+  const safety = ind.safety || {};
+
+  let html = '';
+
+  if (usage) {
+    html += `
+    <div class="card">
+      <div class="section">
+        <h2>💊 دواعي الاستعمال</h2>
+        <p>${safeHtml(usage)}</p>
+      </div>
+    </div>`;
+  }
+
+  const hasSafety = safety.contra || safety.preg || safety.lact;
+  if (hasSafety) {
+    html += `<div class="card"><div class="section">
+      <h2>⚠️ معلومات السلامة</h2>`;
+
+    if (safety.contra) {
+      html += `
+      <div class="safety-block contra">
+        <div class="safety-title">🚫 موانع الاستعمال</div>
+        <p>${safeHtml(safety.contra)}</p>
+      </div>`;
+    }
+
+    if (safety.preg) {
+      html += `
+      <div class="safety-block preg">
+        <div class="safety-title">🤰 الحمل — تصنيف ${escHtml(safety.preg)}</div>
+        ${safety.pregNote ? `<p>${safeHtml(safety.pregNote)}</p>` : ''}
+      </div>`;
+    }
+
+    if (safety.lact) {
+      html += `
+      <div class="safety-block lact">
+        <div class="safety-title">🍼 الرضاعة — درجة ${escHtml(safety.lact)}</div>
+      </div>`;
+    }
+
+    html += `</div></div>`;
+  }
+
+  return html;
+}
+
 // ── Template HTML ──
 function buildPage(drug, slug) {
-  const price    = parseFloat(drug.price) || 0;
-  const unitP    = drug.units > 1 ? (price / drug.units).toFixed(2) : null;
-  const dateStr  = formatDate(drug.Date_updated);
-  const appUrl   = `https://infopharmprice.blogspot.com/?drug=${encodeURIComponent(drug.name)}`;
+  const price   = parseFloat(drug.price) || 0;
+  const unitP   = drug.units > 1 ? (price / drug.units).toFixed(2) : null;
+  const dateStr = formatDate(drug.Date_updated);
+  const appUrl  = `https://infopharmprice.blogspot.com/?drug=${encodeURIComponent(drug.name)}`;
+  const ind     = findIndication(drug.active);
+
+  // Description أغنى لو عندنا indications
+  const dosageForm = (drug.dosage_form || 'default').toLowerCase();
+  const usageText  = ind && ind.usage
+    ? (ind.usage[dosageForm] || ind.usage['default'] || '')
+    : '';
+  const metaDesc = usageText
+    ? `${escHtml(drug.name)} — ${usageText.replace(/<[^>]+>/g,'').slice(0,100)}. السعر: ${price} ج.م`
+    : `سعر ${escHtml(drug.name)} في مصر ${price} جنيه. المادة الفعالة: ${escHtml(drug.active)}. شركة: ${escHtml(drug.company)}.`;
 
   return `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -71,11 +166,11 @@ function buildPage(drug, slug) {
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${escHtml(drug.name)} | سعر الدواء في مصر - Infopharm</title>
-<meta name="description" content="سعر ${escHtml(drug.name)} في مصر ${price} جنيه. المادة الفعالة: ${escHtml(drug.active)}. شركة: ${escHtml(drug.company)}. آخر تحديث: ${dateStr}"/>
+<meta name="description" content="${metaDesc}"/>
 <meta name="keywords" content="${escHtml(drug.name)}, ${escHtml(drug.active)}, سعر دواء, أدوية مصر"/>
 <link rel="canonical" href="https://infopharmsoft-dotcom.github.io/infopharm/drug/${slug}/"/>
 <meta property="og:title" content="${escHtml(drug.name)} | Infopharm"/>
-<meta property="og:description" content="سعر ${escHtml(drug.name)}: ${price} ج.م | ${escHtml(drug.active)}"/>
+<meta property="og:description" content="${metaDesc}"/>
 <meta property="og:url" content="https://infopharmsoft-dotcom.github.io/infopharm/drug/${slug}/"/>
 <meta property="og:type" content="product"/>
 <meta name="google-site-verification" content="8VaHhORs2kWN8gHYegdOOGHKn8ZypKAwJ8_i924trV8"/>
@@ -104,13 +199,17 @@ header span{font-size:12px;opacity:.75;display:block;}
 .section{padding:16px;}
 .section h2{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--blue-l);}
 .section p{font-size:14px;color:var(--txt2);line-height:1.7;}
-/* CTA Buttons */
+.safety-block{background:var(--bg);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.safety-block.contra{border-right:4px solid var(--red);}
+.safety-block.preg{border-right:4px solid #FF9800;}
+.safety-block.lact{border-right:4px solid #9C27B0;}
+.safety-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--txt);}
+.safety-block p{font-size:13px;color:var(--txt2);line-height:1.6;margin:0;}
 .cta-wrap{display:flex;flex-direction:column;gap:10px;padding:0 12px 16px;}
 .btn-app{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--blue);color:#fff;padding:14px;border-radius:12px;text-decoration:none;font-size:15px;font-weight:700;box-shadow:0 3px 8px rgba(25,118,210,.35);}
 .btn-iherb{display:flex;align-items:center;justify-content:center;gap:8px;background:#6CC04A;color:#fff;padding:14px;border-radius:12px;text-decoration:none;font-size:14px;font-weight:700;}
 .btn-iherb small{font-size:11px;opacity:.9;font-weight:400;}
 .date-badge{text-align:center;font-size:11px;color:var(--txt2);padding:8px;background:var(--bg);}
-/* Breadcrumb */
 .breadcrumb{font-size:12px;color:var(--txt2);margin-bottom:12px;}
 .breadcrumb a{color:var(--blue);text-decoration:none;}
 </style>
@@ -127,10 +226,9 @@ header span{font-size:12px;opacity:.75;display:block;}
 <div class="wrap">
 
   <div class="breadcrumb">
-    <a href="https://infopharmprice.github.io">الرئيسية</a> ← ${escHtml(drug.dosage_form || 'دواء')} ← ${escHtml(drug.name)}
+    <a href="https://infopharmprice.blogspot.com">الرئيسية</a> ← ${escHtml(drug.dosage_form || 'دواء')} ← ${escHtml(drug.name)}
   </div>
 
-  <!-- بطاقة السعر الرئيسية -->
   <div class="card">
     <div class="price-hero">
       <div class="drug-name">${escHtml(drug.name)}</div>
@@ -140,7 +238,6 @@ header span{font-size:12px;opacity:.75;display:block;}
       ${unitP ? `<div class="price-sub" style="margin-top:8px;font-size:12px;">سعر الوحدة: ${unitP} ج.م</div>` : ''}
     </div>
 
-    <!-- بيانات الدواء -->
     <div class="info-grid">
       ${drug.active ? `<div class="info-cell"><div class="lbl">المادة الفعالة</div><div class="val" style="font-size:12px;">${escHtml(drug.active)}</div></div>` : ''}
       ${drug.company ? `<div class="info-cell"><div class="lbl">الشركة المنتجة</div><div class="val" style="font-size:12px;">${escHtml(drug.company)}</div></div>` : ''}
@@ -148,26 +245,15 @@ header span{font-size:12px;opacity:.75;display:block;}
       ${drug.units ? `<div class="info-cell"><div class="lbl">عدد الوحدات</div><div class="val">${escHtml(drug.units)}</div></div>` : ''}
     </div>
 
-    ${drug.details ? `
-    <div class="section">
-      <h2>📋 تفاصيل الدواء</h2>
-      <p>${escHtml(drug.details)}</p>
-    </div>` : ''}
-
-    ${drug.description ? `
-    <div class="section">
-      <h2>📂 التصنيف</h2>
-      <p>${escHtml(drug.description)}</p>
-    </div>` : ''}
-
+    ${drug.details ? `<div class="section"><h2>📋 تفاصيل الدواء</h2><p>${escHtml(drug.details)}</p></div>` : ''}
+    ${drug.description ? `<div class="section"><h2>📂 التصنيف</h2><p>${escHtml(drug.description)}</p></div>` : ''}
     <div class="date-badge">📅 آخر تحديث للسعر: ${dateStr}</div>
   </div>
 
-  <!-- CTA Buttons -->
+  ${buildIndicationsSection(drug, ind)}
+
   <div class="cta-wrap">
-    <a href="${appUrl}" class="btn-app">
-      🔍 ابحث عن البدائل والمثيلات في التطبيق
-    </a>
+    <a href="${appUrl}" class="btn-app">🔍 ابحث عن البدائل والمثيلات في التطبيق</a>
     <a href="${iherbLink(drug)}" class="btn-iherb" target="_blank" rel="noopener">
       🛒 اشتري المكملات والفيتامينات من iHerb
       <small>(شحن لمصر)</small>
@@ -176,7 +262,6 @@ header span{font-size:12px;opacity:.75;display:block;}
 
 </div>
 
-<!-- Structured Data for Google -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -184,16 +269,8 @@ header span{font-size:12px;opacity:.75;display:block;}
   "name": "${escHtml(drug.name)}",
   "alternateName": "${escHtml(drug.arabic || '')}",
   "activeIngredient": "${escHtml(drug.active || '')}",
-  "manufacturer": {
-    "@type": "Organization",
-    "name": "${escHtml(drug.company || '')}"
-  },
-  "offers": {
-    "@type": "Offer",
-    "price": "${price}",
-    "priceCurrency": "EGP",
-    "availability": "https://schema.org/InStock"
-  }
+  "manufacturer": {"@type":"Organization","name":"${escHtml(drug.company || '')}"},
+  "offers": {"@type":"Offer","price":"${price}","priceCurrency":"EGP","availability":"https://schema.org/InStock"}
 }
 </script>
 
@@ -203,45 +280,36 @@ header span{font-size:12px;opacity:.75;display:block;}
 
 // ── توليد الصفحات ──
 let count = 0;
-const slugMap = {}; // لمنع تكرار الـ slugs
+const slugMap = {};
 
 for (const drug of drugs) {
   if (!drug.name) continue;
-
   let slug = slugify(drug.name);
-
-  // لو الـ slug متكرر، ضيف رقم
-  if (slugMap[slug]) {
-    slugMap[slug]++;
-    slug = `${slug}-${slugMap[slug]}`;
-  } else {
-    slugMap[slug] = 1;
-  }
-
-  const dir  = path.join(DRUGS_DIR, slug);
+  if (slugMap[slug]) { slugMap[slug]++; slug = `${slug}-${slugMap[slug]}`; }
+  else { slugMap[slug] = 1; }
+  const dir = path.join(DRUGS_DIR, slug);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), buildPage(drug, slug), 'utf8');
-
   count++;
   if (count % 1000 === 0) console.log(`⏳ ${count} / ${drugs.length}`);
 }
 
-// ── صفحة الـ index الرئيسية ──
+// ── index الرئيسية ──
 const indexHtml = `<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Infopharm Pro | دليل أسعار الأدوية في مصر</title>
-<meta name="description" content="دليل شامل لأسعار ${drugs.length.toLocaleString()} دواء في مصر. ابحث عن سعر أي دواء، المادة الفعالة، والبدائل."/>
-<link rel="canonical" href="https://infopharmprice.github.io/"/>
+<meta name="description" content="دليل شامل لأسعار ${drugs.length.toLocaleString()} دواء في مصر."/>
+<link rel="canonical" href="https://infopharmsoft-dotcom.github.io/infopharm/"/>
+<meta name="google-site-verification" content="8VaHhORs2kWN8gHYegdOOGHKn8ZypKAwJ8_i924trV8"/>
 <meta http-equiv="refresh" content="0;url=https://infopharmprice.blogspot.com"/>
 </head>
-<body>
-<p>جاري التحويل للتطبيق...</p>
-</body>
+<body><p>جاري التحويل للتطبيق...</p></body>
 </html>`;
 
 fs.writeFileSync(path.join(DIST, 'index.html'), indexHtml, 'utf8');
+fs.writeFileSync(path.join(DIST, 'google47c6bdf791ecbc38.html'), 'google-site-verification: google47c6bdf791ecbc38.html', 'utf8');
 
 console.log(`\n🎉 تم توليد ${count} صفحة بنجاح!`);
