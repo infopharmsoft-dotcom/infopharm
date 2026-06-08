@@ -212,6 +212,13 @@ header span{font-size:12px;opacity:.75;display:block;}
 .date-badge{text-align:center;font-size:11px;color:var(--txt2);padding:8px;background:var(--bg);}
 .breadcrumb{font-size:12px;color:var(--txt2);margin-bottom:12px;}
 .breadcrumb a{color:var(--blue);text-decoration:none;}
+.info-box{border-radius:12px;padding:14px 16px;margin-bottom:14px;}
+.info-box.blue{background:#E3F2FD;border:1px solid #90CAF9;}
+.info-box.yellow{background:#FFF8E1;border:1px solid #FFD54F;}
+.info-box.purple{background:#F3E5F5;border:1px solid #CE93D8;}
+.info-box .box-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--txt);}
+.info-box p{font-size:13px;color:var(--txt2);line-height:1.7;margin:0;}
+.keywords{font-size:12px;color:var(--txt2);line-height:1.8;}
 </style>
 </head>
 <body>
@@ -251,6 +258,22 @@ header span{font-size:12px;opacity:.75;display:block;}
   </div>
 
   ${buildIndicationsSection(drug, ind)}
+
+  <!-- معلومات + إخلاء مسؤولية + كلمات مفتاحية -->
+  <div class="info-box blue">
+    <div class="box-title">📌 معلومات عن هذا المنتج:</div>
+    <p>سعر دواء <strong>${escHtml(drug.arabic || drug.name)}</strong> هو <strong>${price.toFixed(0)} جنيه مصري</strong>${drug.company ? ` من إنتاج شركة <strong>${escHtml(drug.company)}</strong>` : ''}${dateStr ? `. تم آخر تحديث للسعر في ${dateStr}` : ''}.</p>
+  </div>
+
+  <div class="info-box yellow">
+    <div class="box-title">⚠️ إخلاء مسؤولية:</div>
+    <p>مؤشر أسعار Infopharm Pro مخصص لعرض البيانات والأسعار التجارية ومساندة القرار الصيدلي الاسترشادي وفقاً للملفات المتاحة؛ لا يغني التطبيق عن الفحص الطبي والتشخيص المتخصص وعليك مراجعة الطبيب دائماً.</p>
+  </div>
+
+  <div class="info-box purple">
+    <div class="box-title">🔑 كلمات مفتاحية:</div>
+    <p class="keywords">${escHtml(drug.name)}${drug.arabic ? ', ' + escHtml(drug.arabic) : ''}${drug.company ? ', ' + escHtml(drug.company) : ''}, سعر ${escHtml(drug.name)}, Infopharm Pro, أسعار الأدوية 2026 مصر</p>
+  </div>
 
   <div class="cta-wrap">
     <a href="${appUrl}" class="btn-app">🔍 ابحث عن البدائل والمثيلات في التطبيق</a>
