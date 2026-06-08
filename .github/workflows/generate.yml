@@ -23,9 +23,9 @@ jobs:
       - name: Install dependencies
         run: npm install fflate
 
-      - - name: Download drugs.json.gz from GitHub
+      - name: Download drugs.json.gz from GitHub
         run: |
-          curl -L "..." \
+          curl -L "https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/drugs.json.gz" \
                -o drugs.json.gz
 
       - name: Download indications.json
@@ -35,8 +35,6 @@ jobs:
 
       - name: Generate static pages
         run: node generate.js
-      
-        
 
       - name: Generate Sitemap
         run: node sitemap.js
