@@ -157,16 +157,16 @@ function findCategory(description) {
 function buildCategorySection(drug) {
   const cat = findCategory(drug.description);
   if (!cat) return '';
-  const appUrl = \`https://infopharmprice.blogspot.com/?category=\${encodeURIComponent(drug.description || '')}\`;
-  return \`
+  const appUrl = `https://infopharmprice.blogspot.com/?category=${encodeURIComponent(drug.description || '')}`;
+  return `
   <div class="category-box">
     <div class="cat-title">📂 تصفح أدوية مشابهة</div>
-    <a href="\${appUrl}" class="cat-btn">
-      <span class="cat-icon">\${cat.icon}</span>
-      <span>\${cat.name}</span>
+    <a href="${appUrl}" class="cat-btn">
+      <span class="cat-icon">${cat.icon}</span>
+      <span>${cat.name}</span>
       <span class="cat-arrow">←</span>
     </a>
-  </div>\`;
+  </div>`;
 }
 
 // ── البحث عن indications بالمادة الفعالة ──
@@ -409,4 +409,72 @@ header span{font-size:12px;opacity:.75;display:block;}
 
   <div class="info-box yellow">
     <div class="box-title">⚠️ إخلاء مسؤولية:</div>
-    <p>مؤشر أسعار Infopharm Pro مخصص لعرض البيانات والأسعار التجارية ومساندة 
+    <p>مؤشر أسعار Infopharm Pro مخصص لعرض البيانات والأسعار التجارية ومساندة القرار الصيدلي الاسترشادي وفقاً للملفات المتاحة؛ لا يغني التطبيق عن الفحص الطبي والتشخيص المتخصص وعليك مراجعة الطبيب دائماً.</p>
+  </div>
+
+  <div class="info-box purple">
+    <div class="box-title">🔑 كلمات مفتاحية:</div>
+    <p class="keywords">${escHtml(drug.name)}${drug.arabic ? ', ' + escHtml(drug.arabic) : ''}${drug.company ? ', ' + escHtml(drug.company) : ''}, سعر ${escHtml(drug.name)}, Infopharm Pro, أسعار الأدوية 2026 مصر</p>
+  </div>
+
+  <div class="cta-wrap">
+    <a href="${appUrl}" class="btn-app">🔍 ابحث عن البدائل والمثيلات في التطبيق</a>
+    <a href="${iherbLink(drug)}" class="btn-iherb" target="_blank" rel="noopener">
+      🛒 اشتري المكملات والفيتامينات من iHerb
+      <small>(شحن لمصر)</small>
+    </a>
+  </div>
+
+</div>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Drug",
+  "name": "${escHtml(drug.name)}",
+  "alternateName": "${escHtml(drug.arabic || '')}",
+  "activeIngredient": "${escHtml(drug.active || '')}",
+  "manufacturer": {"@type":"Organization","name":"${escHtml(drug.company || '')}"},
+  "offers": {"@type":"Offer","price":"${price}","priceCurrency":"EGP","availability":"https://schema.org/InStock"}
+}
+</script>
+
+</body>
+</html>`;
+}
+
+// ── توليد الصفحات ──
+let count = 0;
+const slugMap = {};
+
+for (const drug of drugs) {
+  if (!drug.name) continue;
+  let slug = slugify(drug.name);
+  if (slugMap[slug]) { slugMap[slug]++; slug = `${slug}-${slugMap[slug]}`; }
+  else { slugMap[slug] = 1; }
+  const dir = path.join(DRUGS_DIR, slug);
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(path.join(dir, 'index.html'), buildPage(drug, slug), 'utf8');
+  count++;
+  if (count % 1000 === 0) console.log(`⏳ ${count} / ${drugs.length}`);
+}
+
+// ── index الرئيسية ──
+const indexHtml = `<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Infopharm Pro | دليل أسعار الأدوية في مصر</title>
+<meta name="description" content="دليل شامل لأسعار ${drugs.length.toLocaleString()} دواء في مصر."/>
+<link rel="canonical" href="https://infopharmsoft-dotcom.github.io/infopharm/"/>
+<meta name="google-site-verification" content="8VaHhORs2kWN8gHYegdOOGHKn8ZypKAwJ8_i924trV8"/>
+<meta http-equiv="refresh" content="0;url=https://infopharmprice.blogspot.com"/>
+</head>
+<body><p>جاري التحويل للتطبيق...</p></body>
+</html>`;
+
+fs.writeFileSync(path.join(DIST, 'index.html'), indexHtml, 'utf8');
+fs.writeFileSync(path.join(DIST, 'google47c6bdf791ecbc38.html'), 'google-site-verification: google47c6bdf791ecbc38.html', 'utf8');
+
+console.log(`\n🎉 تم توليد ${count} صفحة بنجاح!`);
