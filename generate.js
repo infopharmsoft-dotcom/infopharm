@@ -70,6 +70,105 @@ function iherbLink(drug) {
   return `https://www.iherb.com/search?kw=${query}&rcode=${IHERB_CODE}`;
 }
 
+// ── Category Mapping ──
+const CATEGORY_MAP = {
+  "anti-cough":           { name: "أدوية الكحة",           icon: "🍃" },
+  "cold drug":            { name: "أدوية البرد",            icon: "🤧" },
+  "tonic for men":        { name: "منشطات الرجال",          icon: "❤️" },
+  "colon":                { name: "القولون",                icon: "🫀" },
+  "anti-diabetic":        { name: "أدوية السكر",            icon: "🩸" },
+  "delay action":         { name: "للتأخير عند الرجال",     icon: "⏱️" },
+  "prostate":             { name: "البروستاتا",             icon: "🫁" },
+  "antihistamine":        { name: "مضادات حساسية",          icon: "🌿" },
+  "infertility":          { name: "زيادة الخصوبة",          icon: "🤰" },
+  "antidepressants":      { name: "مضادات الاكتئاب",        icon: "🧠" },
+  "antihyperlipidemic":   { name: "الكوليسترول",            icon: "🩺" },
+  "contraceptive":        { name: "موانع الحمل",            icon: "🚫" },
+  "anticoagulant":        { name: "مضادات التجلط",          icon: "🩸" },
+  "antiviral":            { name: "مضادات فيروسات",         icon: "🦠" },
+  "anti-acne":            { name: "حب الشباب",              icon: "🧴" },
+  "antibiotic":           { name: "مضاد حيوي",              icon: "💊" },
+  "multivitamins":        { name: "فيتامينات",              icon: "🍊" },
+  "multivitamin":         { name: "فيتامينات",              icon: "🍊" },
+  "cerebral":             { name: "أدوية المخ",             icon: "🧠" },
+  "antioxidant":          { name: "مضادات أكسدة",           icon: "🍎" },
+  "orthostatic":          { name: "ضغط الدم المنخفض",       icon: "📉" },
+  "antihypertensive":     { name: "ضغط الدم المرتفع",       icon: "📈" },
+  "mucolytic":            { name: "مذيبات البلغم",          icon: "🫁" },
+  "antigout":             { name: "النقرس",                 icon: "🦶" },
+  "diuretic":             { name: "مدرات البول",            icon: "💧" },
+  "vaccine":              { name: "أمصال وتطعيمات",         icon: "💉" },
+  "antidiarrheal":        { name: "الإسهال",                icon: "🚽" },
+  "peptic ulcer":         { name: "قرحة المعدة",            icon: "🫀" },
+  "peptic ulcer.proton pump inhibitor": { name: "قرحة المعدة", icon: "🫀" },
+  "antacid":              { name: "الحموضة",                icon: "🔥" },
+  "nausea":               { name: "أدوية الغثيان",          icon: "🤢" },
+  "analgesic":            { name: "المسكنات",               icon: "💊" },
+  "appetizer":            { name: "فاتح الشهية",            icon: "🍽️" },
+  "iron":                 { name: "أدوية الحديد والأنيميا", icon: "🩸" },
+  "anthelmintic":         { name: "الديدان",                icon: "🐛" },
+  "antifungal":           { name: "مضاد فطريات",            icon: "🍄" },
+  "whitening":            { name: "تفتيح البشرة",           icon: "✨" },
+  "asthma":               { name: "أدوية الأزمة",           icon: "🫁" },
+  "scar therapy":         { name: "إخفاء الندبات",          icon: "🌟" },
+  "vitamin d":            { name: "فيتامين د",              icon: "☀️" },
+  "massage":              { name: "مساج للعضلات",           icon: "💆" },
+  "psoriasis":            { name: "أدوية الصدفية",          icon: "🧴" },
+  "moisturizing":         { name: "مرطبات الجلد",           icon: "💧" },
+  "laxative":             { name: "الملينات",               icon: "🚽" },
+  "antiflatulent":        { name: "الانتفاخ والغازات",      icon: "💨" },
+  "antimigraine":         { name: "الصداع النصفي",          icon: "🤕" },
+  "anti-epileptic":       { name: "مهدئات",                 icon: "😴" },
+  "digestive":            { name: "عسر الهضم",              icon: "🍽️" },
+  "calcium supplement":   { name: "كالسيوم للعظام",         icon: "🦴" },
+  "antispasmodic":        { name: "المغص والتقلصات",        icon: "🤰" },
+  "osteoarthritis":       { name: "الروماتزم والخشونة",     icon: "🦴" },
+  "antidandruff":         { name: "مضاد للقشرة",            icon: "🧴" },
+  "cerebral circulatory": { name: "زيادة التركيز",          icon: "🎯" },
+  "zinc supplement":      { name: "الزينك",                 icon: "🔋" },
+  "anesthetic":           { name: "مخدر موضعي",             icon: "💉" },
+  "vitamin b":            { name: "فيتامين بي",             icon: "🍞" },
+  "immunity":             { name: "مقويات المناعة",         icon: "🛡️" },
+  "bronchodilator":       { name: "موسع الشعب",             icon: "🫁" },
+  "edematous":            { name: "مضادات التورم",          icon: "💧" },
+  "vitamin c":            { name: "فيتامين سي",             icon: "🍊" },
+  "muscle":               { name: "أدوية العضلات",          icon: "💪" },
+  "hair care":            { name: "العناية بالشعر",         icon: "💇" },
+  "glaucoma":             { name: "الجلكوما",               icon: "👁️" },
+  "wax remover":          { name: "مزيل شمع الأذن",         icon: "👂" },
+  "antiprotozoal":        { name: "مضاد طفيليات",           icon: "🐛" },
+  "liver":                { name: "أدوية الكبد",            icon: "🫀" },
+  "supportive emollient for anorectal disorders": { name: "أدوية الشرج", icon: "💊" },
+  "supports weight management programs": { name: "إدارة الوزن", icon: "⚖️" }
+};
+
+function findCategory(description) {
+  if (!description) return null;
+  const desc = description.toLowerCase().trim();
+  // بحث مباشر
+  if (CATEGORY_MAP[desc]) return CATEGORY_MAP[desc];
+  // بحث جزئي
+  for (const key of Object.keys(CATEGORY_MAP)) {
+    if (desc.includes(key) || key.includes(desc)) return CATEGORY_MAP[key];
+  }
+  return null;
+}
+
+function buildCategorySection(drug) {
+  const cat = findCategory(drug.description);
+  if (!cat) return '';
+  const appUrl = \`https://infopharmprice.blogspot.com/?category=\${encodeURIComponent(drug.description || '')}\`;
+  return \`
+  <div class="category-box">
+    <div class="cat-title">📂 تصفح أدوية مشابهة</div>
+    <a href="\${appUrl}" class="cat-btn">
+      <span class="cat-icon">\${cat.icon}</span>
+      <span>\${cat.name}</span>
+      <span class="cat-arrow">←</span>
+    </a>
+  </div>\`;
+}
+
 // ── البحث عن indications بالمادة الفعالة ──
 function findIndication(active) {
   if (!active) return null;
@@ -248,6 +347,11 @@ header span{font-size:12px;opacity:.75;display:block;}
 .info-box .box-title{font-size:13px;font-weight:700;margin-bottom:6px;color:var(--txt);}
 .info-box p{font-size:13px;color:var(--txt2);line-height:1.7;margin:0;}
 .keywords{font-size:12px;color:var(--txt2);line-height:1.8;}
+.category-box{background:var(--card);border-radius:16px;border:1px solid var(--border);padding:16px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.1);}
+.cat-title{font-size:13px;font-weight:700;color:var(--txt2);margin-bottom:10px;}
+.cat-btn{display:flex;align-items:center;gap:10px;background:var(--blue-l);border:1px solid #90CAF9;border-radius:12px;padding:12px 16px;text-decoration:none;color:var(--blue);font-weight:700;font-size:15px;}
+.cat-icon{font-size:24px;}
+.cat-arrow{margin-right:auto;font-size:18px;}
 .warning-box{background:#FFF3E0;border:1px solid #FF9800;border-right:4px solid #FF9800;border-radius:12px;padding:14px 16px;margin-bottom:14px;}
 .warning-box .w-title{font-size:13px;font-weight:700;color:#E65100;margin-bottom:6px;}
 .warning-box p{font-size:13px;color:#BF360C;line-height:1.7;margin:0;}
@@ -295,6 +399,8 @@ header span{font-size:12px;opacity:.75;display:block;}
   ${buildIndicationsSection(drug, ind)}
   ${buildDosageWarnings(drug)}
 
+  ${buildCategorySection(drug)}
+
   <!-- معلومات + إخلاء مسؤولية + كلمات مفتاحية -->
   <div class="info-box blue">
     <div class="box-title">📌 معلومات عن هذا المنتج:</div>
@@ -303,72 +409,4 @@ header span{font-size:12px;opacity:.75;display:block;}
 
   <div class="info-box yellow">
     <div class="box-title">⚠️ إخلاء مسؤولية:</div>
-    <p>مؤشر أسعار Infopharm Pro مخصص لعرض البيانات والأسعار التجارية ومساندة القرار الصيدلي الاسترشادي وفقاً للملفات المتاحة؛ لا يغني التطبيق عن الفحص الطبي والتشخيص المتخصص وعليك مراجعة الطبيب دائماً.</p>
-  </div>
-
-  <div class="info-box purple">
-    <div class="box-title">🔑 كلمات مفتاحية:</div>
-    <p class="keywords">${escHtml(drug.name)}${drug.arabic ? ', ' + escHtml(drug.arabic) : ''}${drug.company ? ', ' + escHtml(drug.company) : ''}, سعر ${escHtml(drug.name)}, Infopharm Pro, أسعار الأدوية 2026 مصر</p>
-  </div>
-
-  <div class="cta-wrap">
-    <a href="${appUrl}" class="btn-app">🔍 ابحث عن البدائل والمثيلات في التطبيق</a>
-    <a href="${iherbLink(drug)}" class="btn-iherb" target="_blank" rel="noopener">
-      🛒 اشتري المكملات والفيتامينات من iHerb
-      <small>(شحن لمصر)</small>
-    </a>
-  </div>
-
-</div>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Drug",
-  "name": "${escHtml(drug.name)}",
-  "alternateName": "${escHtml(drug.arabic || '')}",
-  "activeIngredient": "${escHtml(drug.active || '')}",
-  "manufacturer": {"@type":"Organization","name":"${escHtml(drug.company || '')}"},
-  "offers": {"@type":"Offer","price":"${price}","priceCurrency":"EGP","availability":"https://schema.org/InStock"}
-}
-</script>
-
-</body>
-</html>`;
-}
-
-// ── توليد الصفحات ──
-let count = 0;
-const slugMap = {};
-
-for (const drug of drugs) {
-  if (!drug.name) continue;
-  let slug = slugify(drug.name);
-  if (slugMap[slug]) { slugMap[slug]++; slug = `${slug}-${slugMap[slug]}`; }
-  else { slugMap[slug] = 1; }
-  const dir = path.join(DRUGS_DIR, slug);
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, 'index.html'), buildPage(drug, slug), 'utf8');
-  count++;
-  if (count % 1000 === 0) console.log(`⏳ ${count} / ${drugs.length}`);
-}
-
-// ── index الرئيسية ──
-const indexHtml = `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Infopharm Pro | دليل أسعار الأدوية في مصر</title>
-<meta name="description" content="دليل شامل لأسعار ${drugs.length.toLocaleString()} دواء في مصر."/>
-<link rel="canonical" href="https://infopharmsoft-dotcom.github.io/infopharm/"/>
-<meta name="google-site-verification" content="8VaHhORs2kWN8gHYegdOOGHKn8ZypKAwJ8_i924trV8"/>
-<meta http-equiv="refresh" content="0;url=https://infopharmprice.blogspot.com"/>
-</head>
-<body><p>جاري التحويل للتطبيق...</p></body>
-</html>`;
-
-fs.writeFileSync(path.join(DIST, 'index.html'), indexHtml, 'utf8');
-fs.writeFileSync(path.join(DIST, 'google47c6bdf791ecbc38.html'), 'google-site-verification: google47c6bdf791ecbc38.html', 'utf8');
-
-console.log(`\n🎉 تم توليد ${count} صفحة بنجاح!`);
+    <p>مؤشر أسعار Infopharm Pro مخصص لعرض البيانات والأسعار التجارية ومساندة 
