@@ -177,12 +177,6 @@ function findIndication(active) {
   for (const k of Object.keys(indications)) {
     if (k.toLowerCase().trim() === key) return indications[k];
   }
-  // بحث جزئي — لو المادة الفعالة تحتوي على الـ key أو العكس
-  for (const k of Object.keys(indications)) {
-    if (key.includes(k.toLowerCase().trim()) || k.toLowerCase().trim().includes(key)) {
-      return indications[k];
-    }
-  }
   return null;
 }
 
