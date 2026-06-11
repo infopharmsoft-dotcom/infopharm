@@ -173,7 +173,7 @@ function buildCategorySection(drug) {
 function findIndication(active) {
   if (!active) return null;
   const key = active.toLowerCase().trim();
-  // بحث مباشر
+  // بحث مباشر فقط — مطابقة تامة
   for (const k of Object.keys(indications)) {
     if (k.toLowerCase().trim() === key) return indications[k];
   }
@@ -427,9 +427,17 @@ header span{font-size:12px;opacity:.75;display:block;}
   "@type": "Drug",
   "name": "${escHtml(drug.name)}",
   "alternateName": "${escHtml(drug.arabic || '')}",
+  "image": "https://raw.githubusercontent.com/infopharmsoft-dotcom/Infopharm-Data1/main/logo.png",
+  "description": "${escHtml(drug.details || drug.description || drug.name)}",
   "activeIngredient": "${escHtml(drug.active || '')}",
   "manufacturer": {"@type":"Organization","name":"${escHtml(drug.company || '')}"},
-  "offers": {"@type":"Offer","price":"${price}","priceCurrency":"EGP","availability":"https://schema.org/InStock"}
+  "offers": {
+    "@type": "Offer",
+    "price": "${price}",
+    "priceCurrency": "EGP",
+    "availability": "https://schema.org/InStock",
+    "url": "https://infopharmsoft-dotcom.github.io/infopharm/drug/${slug}/"
+  }
 }
 </script>
 
