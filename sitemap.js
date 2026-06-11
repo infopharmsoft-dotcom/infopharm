@@ -3,7 +3,6 @@ const fs   = require('fs');
 const path = require('path');
 
 const DIST     = path.join(__dirname, 'dist');
-// ⚠️ التعديل هنا: تم تحديث الدومين وإضافة مسار المجلد الفرعي الفعلي للمشروع
 const BASE_URL = 'https://infopharmsoft-dotcom.github.io/infopharm';
 
 const drugsDir = path.join(DIST, 'drug');
@@ -14,6 +13,7 @@ const slugs    = fs.readdirSync(drugsDir).filter(f =>
 console.log(`📝 بيكتب sitemap لـ ${slugs.length} صفحة...`);
 
 // جوجل بيقبل max 50,000 URL في sitemap واحد
+// لو أكتر، بنعمل sitemap index
 const CHUNK = 40000;
 const chunks = [];
 for (let i = 0; i < slugs.length; i += CHUNK) {
@@ -45,7 +45,7 @@ ${urls}
 </urlset>`;
 
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), xml, 'utf8');
-  console.log('✅ sitemap.xml تم إنشاؤه بنجاح بالدومين الجديد');
+  console.log('✅ sitemap.xml تم إنشاؤه');
 
 } else {
   // sitemap index لو أكتر من 40k صفحة
@@ -80,7 +80,7 @@ ${sitemapIndex}
 </sitemapindex>`;
 
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), indexXml, 'utf8');
-  console.log(`✅ sitemap index + ${chunks.length} sitemaps تم إنشاؤهم بالدومين الجديد`);
+  console.log(`✅ sitemap index + ${chunks.length} sitemaps تم إنشاؤهم`);
 }
 
 // robots.txt
@@ -90,4 +90,4 @@ Allow: /
 Sitemap: ${BASE_URL}/sitemap.xml`;
 
 fs.writeFileSync(path.join(DIST, 'robots.txt'), robots, 'utf8');
-console.log('✅ robots.txt تم إنشاؤه بالدومين الجديد');
+console.log('✅ robots.txt تم إنشاؤه');
