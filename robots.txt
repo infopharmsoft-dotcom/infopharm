@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://infopharmsoft-dotcom.github.io/infopharm/sitemap.xml
